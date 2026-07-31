@@ -1,24 +1,18 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
 export const metadata: Metadata = {
-  title: "Starter Project",
-  description: "A clean starting point for building your site.",
-  icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
-  },
+  title: "공간정보융합산업기사 학습실",
+  description:
+    "공간정보 분석, 공간정보서비스 프로그래밍, 공간정보 융합콘텐츠 개발을 14개 챕터로 배우는 인터랙티브 기본서",
+  keywords: [
+    "공간정보융합산업기사",
+    "공간정보",
+    "GIS",
+    "자격증",
+    "기본서",
+    "예상문제",
+  ],
 };
 
 export default function RootLayout({
@@ -27,12 +21,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
+    <html lang="ko">
+      <body>{children}</body>
     </html>
   );
 }
