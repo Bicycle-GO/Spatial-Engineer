@@ -591,6 +591,66 @@ const courseParts: CoursePart[] = [
 
 const practiceQuestions: (CheckQuestion & { category: string })[] = [
   {
+    category: "융합콘텐츠 개발 · 지도 구성요소",
+    prompt:
+      "지도 구성요소 중 다음 〈보기〉의 설명에 해당하는 것은? 〈보기〉 지도상의 특정 위치, 도시, 표식 등을 설명하는 텍스트",
+    choices: ["기호와 범례", "주석과 레이블", "인덱스 맵", "축척과 방위"],
+    answer: 1,
+    explanation:
+      "정답은 ② 주석과 레이블입니다. 레이블은 지명·도시명·시설명처럼 지도 객체에 연결된 텍스트이고, 주석은 특정 위치의 설명을 보충하는 텍스트입니다. ①은 기호의 의미, ③은 전체 영역 속 현재 위치, ④는 거리 비율과 방향을 알려 줍니다.",
+  },
+  {
+    category: "융합콘텐츠 개발 · 지도 시각화",
+    prompt:
+      "전국 시·군·구의 인구 분포를 단계구분도로 공정하게 비교할 때 가장 적절한 자료는?",
+    choices: [
+      "행정구역별 총인구",
+      "시·군·구청의 위치",
+      "행정구역 면적 1㎢당 인구",
+      "행정구역별 주요 도로의 총길이",
+    ],
+    answer: 2,
+    explanation:
+      "정답은 ③ 인구밀도입니다. 단계구분도는 크기가 다른 면 지역을 비교하므로 총량보다 면적이나 인구로 표준화한 비율 자료를 사용해야 왜곡을 줄일 수 있습니다.",
+  },
+  {
+    category: "융합콘텐츠 개발 · 3차원 모델링",
+    prompt:
+      "단순한 건물 3차원 모델의 표면에 벽돌·유리 등의 실제 재질 이미지를 입히는 작업은?",
+    choices: ["돌출", "텍스처 매핑", "버퍼 분석", "지오코딩"],
+    answer: 1,
+    explanation:
+      "정답은 ② 텍스처 매핑입니다. 2차원 이미지나 재질 정보를 3차원 표면에 적용해 현실감과 식별성을 높입니다. 돌출은 평면 객체에 높이를 부여하는 작업입니다.",
+  },
+  {
+    category: "융합콘텐츠 개발 · 서비스 최적화",
+    prompt:
+      "모바일 3차원 지도에서 가까운 랜드마크는 상세하게, 멀리 있는 건물은 단순하게 표현하는 방식은?",
+    choices: [
+      "모든 객체에 최고 해상도 적용",
+      "거리에 따른 세부 수준 적용",
+      "모든 객체를 2차원 기호로 변환",
+      "화면의 객체를 무작위로 삭제",
+    ],
+    answer: 1,
+    explanation:
+      "정답은 ② 거리에 따른 세부 수준(LOD) 적용입니다. 가까운 객체의 품질을 유지하면서 먼 객체의 데이터 전송량과 렌더링 부하를 줄일 수 있습니다.",
+  },
+  {
+    category: "융합콘텐츠 개발 · 데이터 융합",
+    prompt:
+      "드론 영상, 지적도, 건물 속성자료를 하나의 콘텐츠로 결합할 때 위치 불일치를 막기 위해 우선 확인할 사항은?",
+    choices: [
+      "모든 자료의 글꼴 통일",
+      "좌표계와 공간 기준의 확인·변환",
+      "파일 이름 단축",
+      "지도 범례 제거",
+    ],
+    answer: 1,
+    explanation:
+      "정답은 ② 좌표계와 공간 기준의 확인·변환입니다. 서로 다른 좌표계를 그대로 결합하면 같은 장소가 어긋나 보일 수 있으므로 공통 기준으로 맞춰야 합니다.",
+  },
+  {
     category: "공간정보 기초",
     prompt: "다음 중 래스터 자료에 가장 적합한 대상은?",
     choices: ["건물 필지 경계", "도로 중심선", "연속적인 지표 온도", "버스 정류장 위치"],
@@ -671,6 +731,8 @@ const practiceQuestions: (CheckQuestion & { category: string })[] = [
       "라이다는 지표와 객체에서 반사된 수많은 3차원 좌표점을 점군 형태로 제공합니다.",
   },
 ];
+
+const totalPracticeQuestions = practiceQuestions.length;
 
 const totalChapters = courseParts.reduce(
   (sum, part) => sum + part.chapters.length,
@@ -887,7 +949,7 @@ export default function Home() {
                   <dd>기초 챕터</dd>
                 </div>
                 <div>
-                  <dt>10</dt>
+                  <dt>{totalPracticeQuestions}</dt>
                   <dd>예상문제</dd>
                 </div>
               </dl>
@@ -1277,12 +1339,17 @@ export default function Home() {
               </p>
               <div className="practice-meter">
                 <span>
-                  {quizDone ? 10 : quizIndex + 1}/10
+                  {quizDone ? totalPracticeQuestions : quizIndex + 1}/
+                  {totalPracticeQuestions}
                 </span>
                 <div>
                   <i
                     style={{
-                      width: `${quizDone ? 100 : ((quizIndex + 1) / 10) * 100}%`,
+                      width: `${
+                        quizDone
+                          ? 100
+                          : ((quizIndex + 1) / totalPracticeQuestions) * 100
+                      }%`,
                     }}
                   />
                 </div>
@@ -1295,12 +1362,12 @@ export default function Home() {
                   <span>RESULT</span>
                   <div className="result-score">
                     <strong>{quizScore}</strong>
-                    <i>/ 10</i>
+                    <i>/ {totalPracticeQuestions}</i>
                   </div>
                   <h3>
-                    {quizScore >= 8
+                    {quizScore / totalPracticeQuestions >= 0.8
                       ? "기초 연결이 아주 좋습니다."
-                      : quizScore >= 5
+                      : quizScore / totalPracticeQuestions >= 0.5
                         ? "핵심 개념을 한 번 더 연결해 보세요."
                         : "기본서에서 헷갈린 챕터를 다시 펼쳐보세요."}
                   </h3>
