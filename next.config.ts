@@ -1,17 +1,23 @@
 import type { NextConfig } from "next";
 
 const isGitHubPages = process.env.GITHUB_ACTIONS === "true";
+const isCapacitorBuild = process.env.CAPACITOR_BUILD === "true";
+const isStaticExport = isGitHubPages || isCapacitorBuild;
 
 const nextConfig: NextConfig = {
-  ...(isGitHubPages
+  ...(isStaticExport
     ? {
         output: "export",
-        basePath: "/Spatial-Engineer",
-        assetPrefix: "/Spatial-Engineer/",
         trailingSlash: true,
         images: {
           unoptimized: true,
         },
+        ...(isGitHubPages
+          ? {
+              basePath: "/Spatial-Engineer",
+              assetPrefix: "/Spatial-Engineer/",
+            }
+          : {}),
       }
     : {}),
 };

@@ -2,6 +2,8 @@
 
 # dependencies
 /node_modules
+/.node_modules-corrupt/
+/.npm-cache/
 /.pnp
 .pnp.*
 .yarn/*
@@ -37,6 +39,7 @@ yarn-error.log*
 
 # typescript
 next-env.d.ts
+*.tsbuildinfo
 /dist/
 /.wrangler/
 /outputs/
