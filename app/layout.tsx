@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { SiteHeader, SiteFooter } from "./components/site-header";
 
 export const metadata: Metadata = {
-  title: "공간정보융합산업기사 학습실",
+  title: { default: "공간정보 학습실 | 산업기사 · 기능사", template: "%s | 공간정보 학습실" },
   description:
-    "공간정보 분석, 공간정보서비스 프로그래밍, 공간정보 융합콘텐츠 개발을 14개 챕터로 배우는 인터랙티브 기본서",
+    "공간정보융합산업기사와 공간정보융합기능사를 위한 두 가지 학습 트랙. 기본이론과 문제풀이를 나누어 나만의 속도로 학습하세요.",
+  icons: { icon: `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/favicon.svg` },
   keywords: [
     "공간정보융합산업기사",
+    "공간정보융합기능사",
     "공간정보",
     "GIS",
     "자격증",
@@ -21,8 +24,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko">
-      <body>{children}</body>
+    <html lang="ko" data-scroll-behavior="smooth">
+      <body><SiteHeader />{children}<SiteFooter /></body>
     </html>
   );
 }
