@@ -21,7 +21,7 @@ test("home links to independent theory and practice pages for both tracks", asyn
 });
 
 test("all chapter pages export, with readable theory separate from question controls", async () => {
-  for (const [track, count] of [["engineer", 14], ["technician", 7]]) {
+  for (const [track, count] of [["engineer", 26], ["technician", 19]]) {
     const list = await html(`${track}/theory/`);
     const chapters = await readdir(new URL(`${track}/theory/`, output), { withFileTypes: true });
     const dirs = [];
@@ -31,13 +31,16 @@ test("all chapter pages export, with readable theory separate from question cont
     }
     assert.equal(dirs.length, count);
     for (const directory of dirs) {
-      assert.ok(list.includes(`href="/Spatial-Engineer/${track}/theory/${directory.name}/"`));
       const page = await html(`${track}/theory/${directory.name}/`);
       assert.match(page, /한 문장으로 이해하기/);
       assert.match(page, /핵심 개념/);
       assert.match(page, /학습 완료/);
+      assert.match(page, /사례·문제 포인트/);
+      assert.ok(page.includes(`practice/?chapter=${directory.name}`));
       assert.doesNotMatch(page, /<input[^>]*type="radio"/);
     }
+    assert.match(list, /그림으로 배우는 핵심 12/);
+    assert.ok(list.includes(`href="/Spatial-Engineer/${track}/theory/overlay-analysis/"`));
   }
 });
 
@@ -49,6 +52,22 @@ test("practice pages distinguish original practice items from actual past papers
     assert.match(page, /정답 확인/);
     assert.match(page, /<fieldset/);
     assert.match(page, /기출문제/);
+    assert.match(page, /대화 속 문제/);
+    assert.match(page, /공유 대화 원문/);
+    assert.match(page, /대화의 문항을 재구성한 개념도/);
+  }
+});
+
+test("the twelve visual lessons render controls and source attribution in both tracks", async () => {
+  const ids = ["map-projections", "coordinate-systems", "spatial-modeling", "topology", "overlay-analysis", "spatial-interpolation", "remote-resolution", "image-errors", "relational-database", "operators", "requirements", "software-testing"];
+  for (const track of ["engineer", "technician"]) {
+    for (const id of ids) {
+      const page = await html(`${track}/theory/${id}/`);
+      assert.match(page, /class="lesson-canvas"/);
+      assert.match(page, /학습 자료와 참고 출처/);
+      assert.match(page, /https:\/\/share\.gemini\.google\//);
+      assert.match(page, /class="visual-(choices|controls)"|class="process-selector"/);
+    }
   }
 });
 

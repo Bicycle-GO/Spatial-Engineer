@@ -1,3 +1,5 @@
+import type { LessonGuide } from "./lesson-types";
+
 export type CheckQuestion = {
   prompt: string;
   choices: string[];
@@ -16,6 +18,7 @@ export type Chapter = {
   steps?: string[];
   examPoint: string;
   question: CheckQuestion;
+  guide?: LessonGuide;
 };
 
 export type CoursePart = {

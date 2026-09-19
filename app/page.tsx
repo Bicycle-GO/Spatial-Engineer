@@ -25,7 +25,7 @@ export default function Home() {
           <h3>{track.title}</h3>
           <p className="track-description">{track.description}</p>
           <div className="topic-tags">{track.topics.map(topic => <span key={topic}>{topic}</span>)}</div>
-          <div className="track-metrics"><span><Icon name="book" size={17}/>{getChapters(track).length}개 이론 챕터</span><span><Icon name="quiz" size={17}/>{getQuestions(track).length}개 예상문제</span></div>
+          <div className="track-metrics"><span><Icon name="book" size={17}/>{getChapters(track).length}개 이론 챕터</span><span><Icon name="quiz" size={17}/>{getQuestions(track).length}개 학습문제</span></div>
           <div className="track-actions"><Link className="button primary" href={`/${track.id}/theory/`}><Icon name="book" size={20}/>기본이론 <Icon name="arrow" size={18}/></Link><Link className="button secondary" href={`/${track.id}/practice/`}><Icon name="quiz" size={20}/>기출문제 풀이 <Icon name="arrow" size={18}/></Link></div>
           <TrackProgress trackId={track.id} chapterIds={getChapters(track).map(chapter => chapter.id)} />
         </article>)}
