@@ -21,7 +21,7 @@ test("home links to independent theory and practice pages for both tracks", asyn
 });
 
 test("all chapter pages export, with readable theory separate from question controls", async () => {
-  for (const [track, count] of [["engineer", 26], ["technician", 19]]) {
+  for (const [track, count] of [["engineer", 34], ["technician", 19]]) {
     const list = await html(`${track}/theory/`);
     const chapters = await readdir(new URL(`${track}/theory/`, output), { withFileTypes: true });
     const dirs = [];
@@ -36,17 +36,19 @@ test("all chapter pages export, with readable theory separate from question cont
       assert.match(page, /핵심 개념/);
       assert.match(page, /학습 완료/);
       assert.match(page, /사례·문제 포인트/);
-      assert.ok(page.includes(`practice/?chapter=${directory.name}`));
+      const exam = track === "engineer" ? `${directory.name.startsWith("practical-") ? "practical" : "written"}/` : "";
+      assert.ok(page.includes(`practice/${exam}?chapter=${directory.name}`));
       assert.doesNotMatch(page, /<input[^>]*type="radio"/);
     }
     assert.match(list, /그림으로 배우는 핵심 12/);
-    assert.ok(list.includes(`href="/Spatial-Engineer/${track}/theory/overlay-analysis/"`));
+    const featured = track === "engineer" ? "practical-crs" : "overlay-analysis";
+    assert.ok(list.includes(`href="/Spatial-Engineer/${track}/theory/${featured}/"`));
   }
 });
 
 test("practice pages distinguish original practice items from actual past papers", async () => {
   for (const track of ["engineer", "technician"]) {
-    const page = await html(`${track}/practice/`);
+    const page = await html(`${track}/practice/${track === "engineer" ? "written/" : ""}`);
     assert.match(page, /실제 기출문제가 아닙니다/);
     assert.match(page, /<input[^>]*type="radio"/);
     assert.match(page, /정답 확인/);
@@ -55,6 +57,27 @@ test("practice pages distinguish original practice items from actual past papers
     assert.match(page, /대화 속 문제/);
     assert.match(page, /공유 대화 원문/);
     assert.match(page, /대화의 문항을 재구성한 개념도/);
+  }
+});
+
+test("engineer exam hub separates written choices from practical answer writing", async () => {
+  const hub = await html("engineer/practice/");
+  for (const exam of ["written", "practical"]) {
+    assert.ok(hub.includes(`href="/Spatial-Engineer/engineer/practice/${exam}/"`));
+  }
+  assert.match(hub, /실기 기본이론/);
+  assert.match(hub, /실제 기출문제는 현재 0개/);
+  const page = await html("engineer/practice/practical/");
+  assert.match(page, /실기 필답형 연습/);
+  assert.match(page, /<textarea/);
+  assert.match(page, /모범답안과 비교/);
+  assert.match(page, /공식 기출·채점 기준이 아닙니다/);
+  assert.doesNotMatch(page, /<input[^>]*type="radio"/);
+  for (const id of ["crs","quality","overlay","raster","sql","code","cartography","validation"]) {
+    const lesson = await html(`engineer/theory/practical-${id}/`);
+    assert.match(lesson, /이렇게 답안으로 연결해요/);
+    assert.ok(lesson.includes(`practice/practical/?chapter=practical-${id}`));
+    assert.match(lesson, /학습 자료와 참고 출처/);
   }
 });
 

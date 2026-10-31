@@ -1,4 +1,10 @@
 export const sources: Record<string, { title: string; url: string; kind: "conversation" | "reference" }> = {
+  qnetEngineer: {title:"Q-Net · 공간정보융합산업기사 종목 정보·출제기준", url:"https://www.q-net.or.kr/crf005.do?id=crf00501&jmCd=2331&jmNm=공간정보융합산업기사&jobSearch=N", kind:"reference"},
+  postgisCovers: {title:"PostGIS · ST_Covers와 경계 포함",url:"https://postgis.net/docs/ST_Covers.html",kind:"reference"},
+  pythonControl: {title:"Python · 조건문과 반복문",url:"https://docs.python.org/3/tutorial/controlflow.html",kind:"reference"},
+  mdnFetch: {title:"MDN · Fetch의 응답·오류 처리",url:"https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch",kind:"reference"},
+  qgisRaster: {title:"QGIS · 래스터 재투영과 리샘플링",url:"https://docs.qgis.org/3.44/en/docs/user_manual/processing_algs/gdal/rasterprojections.html",kind:"reference"},
+  qgisMap: {title:"QGIS · 지도 표현 기초",url:"https://docs.qgis.org/3.44/en/docs/gentle_gis_introduction/vector_attribute_data.html",kind:"reference"},
   gemini1: { title: "공유 대화 ① · 투영법, DB, 프로그래밍, 위상", url: "https://share.gemini.google/p14uBOy5VzrA", kind: "conversation" },
   gemini2: { title: "공유 대화 ② · 공간분석, 보간, 원격탐사", url: "https://share.gemini.google/omMX7aoI5div", kind: "conversation" },
   qgisCrs: { title: "QGIS · 좌표 참조 체계", url: "https://docs.qgis.org/3.44/en/docs/gentle_gis_introduction/coordinate_reference_systems.html", kind: "reference" },

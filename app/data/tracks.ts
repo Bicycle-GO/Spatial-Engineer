@@ -2,6 +2,7 @@ import { courseParts, practiceQuestions, type CoursePart } from "./course";
 import { sharedLessons } from "./shared-lessons";
 import { sharedQuestions } from "./shared-questions";
 import type { LearningQuestion } from "./lesson-types";
+import { practicalLessons } from "./practical";
 
 export type TrackId = "engineer" | "technician";
 export type Track = {
@@ -32,7 +33,7 @@ export const tracks: Track[] = [
     label: "분석에서 서비스 구현까지",
     description: "공간정보를 분석하고, 서비스와 콘텐츠로 연결하는 심화 학습",
     topics: ["공간정보 분석", "서비스 프로그래밍", "융합콘텐츠 개발"],
-    parts: courseParts.map((part, index) => ({ ...part, chapters: selectChapters([...part.chapters.map(chapter => chapter.id), ...(index === 0 ? sharedLessons.slice(0, 8).map(chapter => chapter.id) : index === 1 ? sharedLessons.slice(8).map(chapter => chapter.id) : [])]) })),
+    parts: [...courseParts.map((part, index) => ({ ...part, chapters: selectChapters([...part.chapters.map(chapter => chapter.id), ...(index === 0 ? sharedLessons.slice(0, 8).map(chapter => chapter.id) : index === 1 ? sharedLessons.slice(8).map(chapter => chapter.id) : [])]) })), {id:"practical-foundation", number:"PRACTICAL", title:"실기 필답형 기본이론", description:"핵심 개념을 계산·SQL·서술 답안으로 연결합니다.", accent:"green", chapters:practicalLessons}],
   },
   {
     id: "technician",
@@ -62,7 +63,12 @@ export function getChapters(track: Track) {
 }
 
 export function getQuestions(track: Track): LearningQuestion[] {
-  const practice: LearningQuestion[] = getChapters(track).map(chapter => ({ ...chapter.question, id: chapter.id, chapterId: chapter.id, category: chapter.title, kind: "practice" }));
+  const practice: LearningQuestion[] = getChapters(track).filter(chapter => !chapter.practical).map(chapter => ({ ...chapter.question, id: chapter.id, chapterId: chapter.id, category: chapter.title, kind: "practice" }));
   if (track.id === "engineer") practice.unshift(...practiceQuestions.map((question, index): LearningQuestion => ({ ...question, id: `practice-${index}`, kind: "practice" })));
   return [...sharedQuestions, ...practice];
+}
+
+export function getPracticePath(trackId: TrackId, chapterId?: string) {
+  const exam = chapterId?.startsWith("practical-") ? "practical" : "written";
+  return `/${trackId}/practice/${trackId === "engineer" ? `${exam}/` : ""}${chapterId ? `?chapter=${encodeURIComponent(chapterId)}` : ""}`;
 }

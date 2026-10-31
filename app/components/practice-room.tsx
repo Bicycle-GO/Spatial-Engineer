@@ -7,6 +7,7 @@ import type { TrackId } from "../data/tracks";
 import { sources } from "../data/sources";
 import { Icon } from "./icons";
 import { ClipQuestionDiagram } from "./lesson-visuals";
+import { ExamNavigation } from "./exam-navigation";
 
 type Question = LearningQuestion;
 function subscribeLocation(callback: () => void) {
@@ -29,7 +30,8 @@ function PracticeContent({ trackId, questions, initialChapter }: { trackId: Trac
   const available = questions.filter(question => question.kind === source);
   const filtered = category === "all" ? available : available.filter(question => question.category === category);
   return <>
-    <div className="page-heading"><span className="eyebrow">PUT KNOWLEDGE INTO PRACTICE</span><h1>기출문제 풀이</h1><p>한 문제씩 풀고, 해설로 개념을 완성하세요.</p></div>
+    {trackId === "engineer" && <ExamNavigation current="written"/>}
+    <div className="page-heading"><span className="eyebrow">PUT KNOWLEDGE INTO PRACTICE</span><h1>{trackId === "engineer" ? "필기 기출·예상문제" : "기출문제 풀이"}</h1><p>한 문제씩 풀고, 해설로 개념을 완성하세요.</p></div>
     <div className="practice-sources" aria-label="문제 유형">{[{id:"shared",label:"대화 속 문제"},{id:"practice",label:"예상문제"},{id:"past",label:"기출문제"}].map(item => <button key={item.id} aria-pressed={source === item.id} onClick={() => { setSource(item.id); setCategory("all"); }}>{item.label}<span>{questions.filter(question => question.kind === item.id).length}</span></button>)}</div>
     {source === "past" ? <div className="empty-state"><Icon name="quiz" size={38}/><h2>등록된 기출문제가 없어요.</h2><p>출처와 회차가 확인된 기출문제는 아직 등록되지 않았습니다.<br/>대화 속 문제와 예상문제로 개념을 점검해 보세요.</p><button className="button primary" onClick={() => { setSource("shared"); setCategory("all"); }}>대화 속 문제 풀기 <Icon name="arrow" size={18}/></button></div> : <>
       <p className="source-notice"><span>{source === "shared" ? "대화 속 문제 안내" : "예상문제 안내"}</span>{source === "shared" ? "공유 대화의 문항을 학습용으로 재구성했습니다. 시행 연도·회차가 확인된 실제 기출문제가 아닙니다." : "현재 문항은 학습용으로 구성한 예상문제이며, 실제 기출문제가 아닙니다."}</p>

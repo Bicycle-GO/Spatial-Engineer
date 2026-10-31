@@ -19,6 +19,7 @@ export type Chapter = {
   examPoint: string;
   question: CheckQuestion;
   guide?: LessonGuide;
+  practical?: { answerTemplate: string; sourceIds: string[] };
 };
 
 export type CoursePart = {
