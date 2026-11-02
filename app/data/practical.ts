@@ -1,4 +1,6 @@
 import type { Chapter } from "./course";
+import { practicalPastQuestions } from "./practical-past";
+export { practicalPastQuestions } from "./practical-past";
 
 export type PracticalQuestion = {
   id: string;
@@ -14,6 +16,8 @@ export type PracticalQuestion = {
   explanation: string[];
   criteria: string[];
   mistakes: string;
+  provenance?: { section: string; number: number; note: string };
+  referenceIds?: string[];
 };
 
 // Original study exercises. No item is attributed to an unverified exam year or session.
@@ -35,6 +39,8 @@ export const practicalQuestions: PracticalQuestion[] = [
   { id:"pr-test", chapterId:"practical-validation", category:"지도·검증", title:"검증 가능한 요구와 테스트", format:"서술형", context:"고객이 ‘주소로 필지를 검색하고, 빠르게 결과를 보여 달라’고 요청했다.", prompt:"기능 요구와 측정 가능한 비기능 요구 예시를 각각 쓰고, 전체 검색 흐름과 사용자 수용 여부를 확인할 테스트 수준을 구분하시오.", hint:"응답시간에는 데이터량·부하 등 측정 조건이 필요합니다.", modelAnswer:"기능: 주소 입력으로 해당 필지를 검색해 지도에 표시한다. 비기능 예시: 정해진 데이터량·동시 사용자 조건에서 검색 응답이 2초 이내여야 한다. 전체 흐름은 시스템 테스트, 합의된 업무 수용 기준은 인수 테스트로 확인한다. 2초는 이 문항의 학습용 예시값이다.", explanation:["빠르다는 표현만으로는 통과·실패를 판정하기 어렵습니다.","시스템 수준의 검증과 업무 목적에 따른 수용을 구분합니다."], criteria:["구체적인 검색 기능을 썼다.","조건과 측정 지표가 있는 비기능 요구를 썼다.","시스템과 인수 테스트를 구분했다."], mistakes:"‘빠르고 편리하다’만 적거나 시스템과 인수 테스트를 같은 뜻으로 쓰는 답안" },
   { id:"pr-delivery", chapterId:"practical-validation", category:"지도·검증", title:"성과물과 메타데이터 검수", format:"서술형", prompt:"분석 결과를 다른 담당자에게 전달할 때 재현성과 올바른 해석을 위해 함께 기록할 사항을 4가지 이상 쓰시오.", hint:"무엇으로, 어떤 기준과 조건에서, 언제 만들었는지 설명합니다.", modelAnswer:"자료 출처·취득 또는 기준 시점, CRS와 단위, 처리 절차·도구·주요 매개변수, 속성 항목과 코드 정의, 품질검사 결과와 한계, 파일 형식·버전·이용 조건 등을 기록한다.", explanation:["그림 파일 하나만으로는 데이터의 좌표와 처리 조건을 복원하기 어렵습니다.","품질검사와 한계를 함께 기록하면 결과를 사용할 범위를 판단할 수 있습니다."], criteria:["출처·기준 시점을 포함했다.","CRS·단위·속성 정의를 포함했다.","절차·매개변수와 품질·한계를 포함했다."], mistakes:"파일명과 담당자 이름만 기록하는 답안" },
 ];
+
+export const allPracticalQuestions: PracticalQuestion[] = [...practicalPastQuestions, ...practicalQuestions];
 
 type LessonSeed = {
   id:string; title:string; summary:string; definition:string; keywords:string[];

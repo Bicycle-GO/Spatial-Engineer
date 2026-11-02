@@ -1,4 +1,7 @@
 export const sources: Record<string, { title: string; url: string; kind: "conversation" | "reference" }> = {
+  qgisLayers: {title:"QGIS · 레이어와 공간 데이터 관리",url:"https://docs.qgis.org/3.44/en/docs/user_manual/introduction/general_tools.html",kind:"reference"},
+  lxCoordinates: {title:"LX 한국국토정보공사 · 평면직각좌표계 용어",url:"https://baro.lx.or.kr/lgstrTermDict/selectLgstrTermDict.do?pageIndex=4",kind:"reference"},
+  qgisTransforms: {title:"QGIS · Helmert·Affine 변환",url:"https://docs.qgis.org/3.44/en/docs/user_manual/managing_data_source/georeferencer.html",kind:"reference"},
   qnetEngineer: {title:"Q-Net · 공간정보융합산업기사 종목 정보·출제기준", url:"https://www.q-net.or.kr/crf005.do?id=crf00501&jmCd=2331&jmNm=공간정보융합산업기사&jobSearch=N", kind:"reference"},
   postgisCovers: {title:"PostGIS · ST_Covers와 경계 포함",url:"https://postgis.net/docs/ST_Covers.html",kind:"reference"},
   pythonControl: {title:"Python · 조건문과 반복문",url:"https://docs.python.org/3/tutorial/controlflow.html",kind:"reference"},

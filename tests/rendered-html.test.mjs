@@ -66,7 +66,8 @@ test("engineer exam hub separates written choices from practical answer writing"
     assert.ok(hub.includes(`href="/Spatial-Engineer/engineer/practice/${exam}/"`));
   }
   assert.match(hub, /실기 기본이론/);
-  assert.match(hub, /실제 기출문제는 현재 0개/);
+  assert.match(hub, /사용자 제공 기출/);
+  assert.ok(hub.includes("source=past&amp;chapter=spatial-basics"));
   const page = await html("engineer/practice/practical/");
   assert.match(page, /실기 필답형 연습/);
   assert.match(page, /<textarea/);
@@ -79,6 +80,30 @@ test("engineer exam hub separates written choices from practical answer writing"
     assert.ok(lesson.includes(`practice/practical/?chapter=practical-${id}`));
     assert.match(lesson, /학습 자료와 참고 출처/);
   }
+});
+
+test("the three user-provided practical questions retain scope and provenance", async () => {
+  const ts = await import("typescript");
+  const source = await readFile(new URL("../app/data/practical-past.ts", import.meta.url), "utf8");
+  const { outputText } = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } });
+  const { practicalPastQuestions: questions } = await import(`data:text/javascript;base64,${Buffer.from(outputText).toString("base64")}`);
+  assert.equal(questions.length, 3);
+  assert.equal(new Set(questions.map(question => question.id)).size, 3);
+  for (const [index, question] of questions.entries()) {
+    assert.equal(question.chapterId, "spatial-basics");
+    assert.equal(question.provenance.number, index + 1);
+    assert.match(question.provenance.section, /Chapter 1\. 공간정보 분석 → 공간정보 기초/);
+    assert.match(question.provenance.note, /시행 연도·회차와 공식 원문은 미확인/);
+    assert.ok(question.modelAnswer && question.explanation.length && question.criteria.length);
+  }
+  assert.match(questions[0].prompt, /객체의 종류별로 구분하여 하나의 파일 단위로 입력한 후/);
+  assert.equal(questions[0].modelAnswer, "레이어(Layer)");
+  assert.match(questions[1].prompt, /자오선을 X축, 동서 방향을 Y축/);
+  assert.match(questions[1].modelAnswer, /평면직각좌표계/);
+  assert.equal(questions[2].prompt, "하나의 좌표계에서 다른 좌표계로의 변환을 의미하는 좌표 변환 방법 2가지를 쓰시오.");
+  assert.match(questions[2].modelAnswer, /학습용 모범답안 예시/);
+  const lesson = await html("engineer/theory/spatial-basics/");
+  assert.ok(lesson.includes("source=past&amp;chapter=spatial-basics"));
 });
 
 test("the twelve visual lessons render controls and source attribution in both tracks", async () => {

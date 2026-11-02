@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { Chapter } from "../data/course";
 import type { TrackId } from "../data/tracks";
 import { getPracticePath } from "../data/tracks";
-import { practicalQuestions } from "../data/practical";
+import { practicalPastQuestions, practicalQuestions } from "../data/practical";
 import { sources } from "../data/sources";
 import { LessonVisual } from "./lesson-visuals";
 import { Icon } from "./icons";
@@ -14,11 +14,13 @@ export function LessonReader({ chapter, trackId }: { chapter: Chapter; trackId: 
   const practicePath = getPracticePath(trackId,chapter.id);
   const sourceIds = guide?.sourceIds ?? chapter.practical?.sourceIds;
   const relatedQuestions = chapter.practical ? practicalQuestions.filter(question=>question.chapterId===chapter.id) : [];
+  const providedPast = trackId === "engineer" ? practicalPastQuestions.filter(question=>question.chapterId===chapter.id) : [];
   const [view, setView] = useState(guide ? "visual" : "concepts");
   const views = [...(guide ? [{ id: "visual", label: "그림으로 이해" }] : []), { id: "concepts", label: "개념·비교" }, { id: "application", label: "사례·문제 포인트" }];
 
   return <div className="lesson-reader">
     <section className="definition-card"><span className="eyebrow">한 문장으로 이해하기</span><p>{chapter.definition}</p></section>
+    {providedPast.length > 0 && <a className="past-paper-link" href={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/engineer/practice/practical/?source=past&chapter=${chapter.id}`}><span className="mini-kicker">이 단원의 실기 기출 · 사용자 제공</span><strong>레이어·평면직각좌표계·좌표변환</strong><span>{providedPast.length}문제 풀기 <Icon name="arrow" size={17}/></span></a>}
     <div className="reader-switch" aria-label="학습 내용 선택">{views.map((item, index) => <button key={item.id} aria-pressed={view === item.id} aria-controls="lesson-content" onClick={() => setView(item.id)}><span>0{index + 1}</span>{item.label}</button>)}</div>
     <div id="lesson-content" className="reader-content">
       {view === "visual" && guide && <section className="visual-lesson"><div className="reader-section-heading"><span className="mini-kicker">INTERACTIVE LESSON · 약 {guide.minutes}분</span><h2>핵심 개념을 그림으로</h2><p>{guide.takeaway}</p></div><div className="lesson-canvas"><LessonVisual kind={guide.visual}/></div><button className="reader-next" onClick={() => setView("concepts")}>개념과 비교표로 정리하기 <Icon name="arrow" size={18}/></button></section>}
