@@ -15,11 +15,20 @@ export function LessonReader({ chapter, trackId }: { chapter: Chapter; trackId: 
   const sourceIds = guide?.sourceIds ?? chapter.practical?.sourceIds;
   const relatedQuestions = chapter.practical ? practicalQuestions.filter(question=>question.chapterId===chapter.id) : [];
   const providedPast = trackId === "engineer" ? practicalPastQuestions.filter(question=>question.chapterId===chapter.id) : [];
+  const nextConcept = trackId === "engineer" && ["practical-transformation","practical-quality"].includes(chapter.id)
+    ? {id:"practical-adjustment-error",title:"보정 결과는 어떻게 검토할까요?",text:"점별 잔차와 여러 점의 RMS 오차를 그림으로 비교해요"}
+    : trackId === "engineer" && ["processing","practical-raster","practical-vectorization"].includes(chapter.id)
+    ? {id:"practical-rasterization",title:"반대 방향도 이해하기 · 벡터에서 래스터로",text:"같은 셀도 결정 규칙에 따라 값이 달라져요"}
+    : trackId === "engineer" && ["spatial-basics","coordinate-systems","practical-crs"].includes(chapter.id)
+    ? {id:"practical-transformation",title:"공간위치 보정 · 세 가지 변환",text:"상사·아핀·사영변환을 같은 도형으로 비교해요"} : null;
   const [view, setView] = useState(guide ? "visual" : "concepts");
   const views = [...(guide ? [{ id: "visual", label: "그림으로 이해" }] : []), { id: "concepts", label: "개념·비교" }, { id: "application", label: "사례·문제 포인트" }];
 
   return <div className="lesson-reader">
     <section className="definition-card"><span className="eyebrow">한 문장으로 이해하기</span><p>{chapter.definition}</p></section>
+    {nextConcept && <a className="past-paper-link" href={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/engineer/theory/${nextConcept.id}/`}><span className="mini-kicker">연결해서 공부하기</span><strong>{nextConcept.title}</strong><span>{nextConcept.text} <Icon name="arrow" size={17}/></span></a>}
+    {trackId === "engineer" && ["processing", "image-processing", "practical-raster"].includes(chapter.id) && <a className="past-paper-link" href={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/engineer/theory/practical-vectorization/`}><span className="mini-kicker">도면 벡터화 과정 그림 학습</span><strong>전처리 → 세선화 → 벡터화 → 후처리</strong><span>단계별 도형과 빈칸 문제 풀어보기 <Icon name="arrow" size={17}/></span></a>}
+    {trackId === "engineer" && ["topology", "practical-quality"].includes(chapter.id) && <a className="past-paper-link" href={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/engineer/theory/practical-topology/`}><span className="mini-kicker">실기 위상 규칙 그림 학습</span><strong>포인트·라인·폴리곤 규칙을 도형으로 비교하기</strong><span>실생활 사례와 실기 예상문제로 연결 <Icon name="arrow" size={17}/></span></a>}
     {providedPast.length > 0 && <a className="past-paper-link" href={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/engineer/practice/practical/?source=past&chapter=${chapter.id}`}><span className="mini-kicker">이 단원의 실기 기출 · 사용자 제공</span><strong>레이어·평면직각좌표계·좌표변환</strong><span>{providedPast.length}문제 풀기 <Icon name="arrow" size={17}/></span></a>}
     <div className="reader-switch" aria-label="학습 내용 선택">{views.map((item, index) => <button key={item.id} aria-pressed={view === item.id} aria-controls="lesson-content" onClick={() => setView(item.id)}><span>0{index + 1}</span>{item.label}</button>)}</div>
     <div id="lesson-content" className="reader-content">

@@ -1,5 +1,10 @@
 import type { Chapter } from "./course";
 import { practicalPastQuestions } from "./practical-past";
+import { topologyLesson, topologyPracticalQuestions, type TopologyRuleId } from "./topology-rules";
+import { vectorizationLesson, vectorizationPracticalQuestions } from "./vectorization";
+import { rasterizationLesson, rasterizationPracticalQuestions } from "./rasterization";
+import { transformationLesson, transformationPracticalQuestions } from "./transformation";
+import { adjustmentErrorLesson, adjustmentErrorQuestions } from "./adjustment-error";
 export { practicalPastQuestions } from "./practical-past";
 
 export type PracticalQuestion = {
@@ -18,6 +23,7 @@ export type PracticalQuestion = {
   mistakes: string;
   provenance?: { section: string; number: number; note: string };
   referenceIds?: string[];
+  diagram?: { kind: "topology"; ruleId: TopologyRuleId } | { kind: "vectorization" };
 };
 
 // Original study exercises. No item is attributed to an unverified exam year or session.
@@ -38,6 +44,11 @@ export const practicalQuestions: PracticalQuestion[] = [
   { id:"pr-layout", chapterId:"practical-cartography", category:"지도·검증", title:"면적비와 축척비", format:"계산형", prompt:"같은 지역을 1:10,000 지도에서 1:20,000 지도로 바꾸었다. 지도 위 길이와 면적은 각각 기존의 몇 배가 되는가?", hint:"길이 비율을 먼저 구하고 면적에는 제곱을 적용합니다.", modelAnswer:"길이는 10,000 / 20,000 = 1/2배, 면적은 (1/2)² = 1/4배이다.", explanation:["축척 분모가 커지면 같은 지역이 더 작게 표현됩니다.","면적은 길이 비율의 제곱으로 변합니다."], criteria:["지도상 길이 비율을 1/2로 구했다.","지도상 면적 비율을 1/4로 구했다."], mistakes:"면적도 1/2배라고 쓰는 답안" },
   { id:"pr-test", chapterId:"practical-validation", category:"지도·검증", title:"검증 가능한 요구와 테스트", format:"서술형", context:"고객이 ‘주소로 필지를 검색하고, 빠르게 결과를 보여 달라’고 요청했다.", prompt:"기능 요구와 측정 가능한 비기능 요구 예시를 각각 쓰고, 전체 검색 흐름과 사용자 수용 여부를 확인할 테스트 수준을 구분하시오.", hint:"응답시간에는 데이터량·부하 등 측정 조건이 필요합니다.", modelAnswer:"기능: 주소 입력으로 해당 필지를 검색해 지도에 표시한다. 비기능 예시: 정해진 데이터량·동시 사용자 조건에서 검색 응답이 2초 이내여야 한다. 전체 흐름은 시스템 테스트, 합의된 업무 수용 기준은 인수 테스트로 확인한다. 2초는 이 문항의 학습용 예시값이다.", explanation:["빠르다는 표현만으로는 통과·실패를 판정하기 어렵습니다.","시스템 수준의 검증과 업무 목적에 따른 수용을 구분합니다."], criteria:["구체적인 검색 기능을 썼다.","조건과 측정 지표가 있는 비기능 요구를 썼다.","시스템과 인수 테스트를 구분했다."], mistakes:"‘빠르고 편리하다’만 적거나 시스템과 인수 테스트를 같은 뜻으로 쓰는 답안" },
   { id:"pr-delivery", chapterId:"practical-validation", category:"지도·검증", title:"성과물과 메타데이터 검수", format:"서술형", prompt:"분석 결과를 다른 담당자에게 전달할 때 재현성과 올바른 해석을 위해 함께 기록할 사항을 4가지 이상 쓰시오.", hint:"무엇으로, 어떤 기준과 조건에서, 언제 만들었는지 설명합니다.", modelAnswer:"자료 출처·취득 또는 기준 시점, CRS와 단위, 처리 절차·도구·주요 매개변수, 속성 항목과 코드 정의, 품질검사 결과와 한계, 파일 형식·버전·이용 조건 등을 기록한다.", explanation:["그림 파일 하나만으로는 데이터의 좌표와 처리 조건을 복원하기 어렵습니다.","품질검사와 한계를 함께 기록하면 결과를 사용할 범위를 판단할 수 있습니다."], criteria:["출처·기준 시점을 포함했다.","CRS·단위·속성 정의를 포함했다.","절차·매개변수와 품질·한계를 포함했다."], mistakes:"파일명과 담당자 이름만 기록하는 답안" },
+  ...topologyPracticalQuestions,
+  ...vectorizationPracticalQuestions,
+  ...rasterizationPracticalQuestions,
+  ...transformationPracticalQuestions,
+  ...adjustmentErrorQuestions,
 ];
 
 export const allPracticalQuestions: PracticalQuestion[] = [...practicalPastQuestions, ...practicalQuestions];
@@ -58,9 +69,13 @@ const seeds: LessonSeed[] = [
   { id:"practical-validation", title:"실기 기초 · 요구·테스트·성과물", summary:"확인 가능한 조건과 재현 가능한 결과를 답안으로 씁니다.", definition:"요구를 측정 가능한 기준으로 바꾸고 테스트와 기록을 연결해야 결과의 적합성을 설명할 수 있습니다.", keywords:["기능·비기능","시스템·인수","메타데이터","재현성"], concepts:[{label:"측정 가능한 요구",text:"‘주소로 필지를 검색’은 기능, 정해진 부하와 데이터 조건에서 응답시간을 만족하는 것은 성능에 대한 비기능 요구입니다."},{label:"테스트 수준",text:"함수는 단위, 구성요소 연결은 통합, 전체 서비스는 시스템, 사용자 업무 수용 기준은 인수 테스트로 구분합니다."},{label:"성과물 검수",text:"CRS·단위·객체 수·속성·도형·범례를 확인합니다. 출처·시점·처리 조건·품질·한계를 기록하고 저장 후 다시 열어 확인합니다."}], steps:["요구·수용 기준 명세","수준별 테스트","성과물 검수","메타데이터·이력 전달"], examPoint:"‘확인한다’로 끝내지 말고 무엇을 어떤 기준으로 확인하는지 적으세요. 자가점검 기준은 이 사이트의 학습용 기준입니다.", answerTemplate:"요구 식별자 → 측정 조건·통과 기준 → 테스트 대상·방법 → 결과와 변경 이력 → 메타데이터를 연결해 기록한다.", sources:["istqb"], question:{prompt:"업무 담당자가 합의된 수용 기준을 확인하는 테스트는?",choices:["단위","통합","인수","리샘플링"],answer:2,explanation:"인수 테스트는 업무 목적과 합의된 수용 기준의 충족 여부를 확인합니다."} },
 ];
 
-export const practicalLessons: Chapter[] = seeds.map((seed,index) => ({
+const foundationLessons: Chapter[] = seeds.map((seed,index) => ({
   id:seed.id, number:String(index+1).padStart(2,"0"), title:seed.title, summary:seed.summary,
   definition:seed.definition, keywords:seed.keywords, concepts:seed.concepts, steps:seed.steps,
   examPoint:seed.examPoint, question:seed.question,
   practical:{ answerTemplate:seed.answerTemplate, sourceIds:seed.sources },
 }));
+
+export const practicalLessons: Chapter[] = [
+  foundationLessons[0], transformationLesson, adjustmentErrorLesson, foundationLessons[1], topologyLesson, ...foundationLessons.slice(2, 4), vectorizationLesson, rasterizationLesson, ...foundationLessons.slice(4),
+].map((lesson, index) => ({ ...lesson, number: String(index + 1).padStart(2, "0") }));

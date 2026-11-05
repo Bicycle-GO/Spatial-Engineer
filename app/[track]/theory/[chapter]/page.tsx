@@ -4,6 +4,7 @@ import { getTrack, getChapters, getPracticePath } from "../../../data/tracks";
 import { Icon } from "../../../components/icons";
 import { ChapterActions } from "../../../components/chapter-actions";
 import { LessonReader } from "../../../components/lesson-reader";
+import { getPracticalSection } from "../../../data/practical-curriculum";
 
 export function generateStaticParams({ params }: { params: { track: string } }) {
   const track = getTrack(params.track);
@@ -23,10 +24,11 @@ export default async function ChapterPage({ params }: { params: Promise<{ track:
   const chapter = chapters[index];
   if (!chapter) notFound();
   const part = track.parts.find(part => part.chapters.some(item => item.id === chapter.id))!;
+  const practicalSection = track.id === "engineer" && chapter.practical ? getPracticalSection(chapter.id) : undefined;
   return <>
-    <nav className="breadcrumbs" aria-label="현재 위치"><Link href={`/${track.id}/theory/`}>기본이론</Link><Icon name="chevron" size={14}/><span>{part.title}</span></nav>
+    <nav className="breadcrumbs" aria-label="현재 위치"><Link href={`/${track.id}/theory/`}>기본이론</Link><Icon name="chevron" size={14}/><span>{practicalSection ? `실기 Chapter ${Number(practicalSection.number)} · ${practicalSection.title}` : part.title}</span></nav>
     <article className="lesson">
-      <header className="lesson-heading"><span className="eyebrow">CHAPTER {String(index + 1).padStart(2, "0")} / {String(chapters.length).padStart(2, "0")}</span><h1>{chapter.title}</h1><p>{chapter.summary}</p><div className="topic-tags">{chapter.keywords.map(keyword => <span key={keyword}>{keyword}</span>)}</div></header>
+      <header className="lesson-heading"><span className="eyebrow">{practicalSection ? `실기 CHAPTER ${Number(practicalSection.number)} · ${practicalSection.title}` : `CHAPTER ${String(index + 1).padStart(2, "0")} / ${String(chapters.length).padStart(2, "0")}`}</span><h1>{chapter.title}</h1><p>{chapter.summary}</p><div className="topic-tags">{chapter.keywords.map(keyword => <span key={keyword}>{keyword}</span>)}</div></header>
       <LessonReader key={chapter.id} chapter={chapter} trackId={track.id}/>
       <ChapterActions trackId={track.id} chapterId={chapter.id} nextId={chapters[index + 1]?.id}/>
       <div className="lesson-pagination">{index > 0 ? <Link href={`/${track.id}/theory/${chapters[index - 1].id}/`}>← 이전 챕터</Link> : <Link href={`/${track.id}/theory/`}>← 전체 챕터</Link>}<a href={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${getPracticePath(track.id,chapter.id)}`}>이 개념 문제 풀기 <Icon name="arrow" size={17}/></a></div>

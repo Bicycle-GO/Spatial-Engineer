@@ -3,6 +3,11 @@
 import { useId, useState } from "react";
 import type { VisualKind } from "../data/lesson-types";
 import { Icon } from "./icons";
+import { TopologyVisual as TopologyRulesVisual } from "./topology-visual";
+import { VectorizationVisual } from "./vectorization-visual";
+import { RasterizationVisual } from "./rasterization-visual";
+import { TransformationVisual } from "./transformation-visual";
+import { ResidualErrorVisual } from "./residual-error-visual";
 
 function Choices({ items, value, onChange, label }: { items: string[]; value: number; onChange: (index: number) => void; label: string }) {
   return <div className="visual-choices" aria-label={label}>{items.map((item, index) => <button type="button" key={item} aria-pressed={value === index} onClick={() => onChange(index)}>{item}</button>)}</div>;
@@ -118,6 +123,11 @@ export function LessonVisual({ kind }: { kind: VisualKind }) {
     case "coordinates": return <CoordinateVisual/>;
     case "modeling": return <ModelingVisual/>;
     case "topology": return <TopologyVisual/>;
+    case "topology-rules": return <TopologyRulesVisual/>;
+    case "vectorization": return <VectorizationVisual/>;
+    case "rasterization": return <RasterizationVisual/>;
+    case "transformation": return <TransformationVisual/>;
+    case "residual-error": return <ResidualErrorVisual/>;
     case "overlay": return <OverlayVisual/>;
     case "interpolation": return <InterpolationVisual/>;
     case "resolution": return <ResolutionVisual/>;
