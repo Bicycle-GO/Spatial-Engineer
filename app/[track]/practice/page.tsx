@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { getTrack, getQuestions } from "../../data/tracks";
 import { PracticeRoom } from "../../components/practice-room";
 import { PracticeHub } from "../../components/practice-hub";
+import { technicianPastQuestionCount } from "../../data/technician-past-papers";
 
 export async function generateMetadata({ params }: { params: Promise<{ track: string }> }) {
   const { track } = await params;
@@ -11,5 +12,5 @@ export default async function PracticePage({ params }: { params: Promise<{ track
   const { track: id } = await params;
   const track = getTrack(id);
   if (!track) notFound();
-  return track.id === "engineer" ? <PracticeHub/> : <PracticeRoom key={track.id} trackId={track.id} questions={getQuestions(track)}/>;
+  return track.id === "engineer" ? <PracticeHub/> : <PracticeRoom key={track.id} trackId={track.id} questions={getQuestions(track)} pastQuestionCount={technicianPastQuestionCount}/>;
 }

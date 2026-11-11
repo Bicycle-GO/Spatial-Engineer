@@ -1,0 +1,47 @@
+.guide { min-width: 0; margin-top: 1.6rem; padding-top: 1.4rem; border-top: 1px solid #d5dfcb; color: #30442f; font-size: 1.02rem; line-height: 1.75; overflow-wrap: anywhere; }
+.guide *, .guide *::before, .guide *::after { box-sizing: border-box; }
+.header h4 { margin: .3rem 0 .6rem; font-size: 1.3rem; line-height: 1.5; }
+.header p { margin: 0 0 1rem; }
+.kicker { color: #718458; font-size: .9rem; font-weight: 750; letter-spacing: .07em; }
+.ruleOptions { display: flex; flex-wrap: wrap; gap: .5rem; }
+.ruleOptions button, .universeControl button { padding: .65rem 1rem; border: 1px solid #cbd7be; border-radius: 9px; color: #455d37; background: #f5f8ed; font: inherit; font-weight: 700; cursor: pointer; }
+.ruleOptions button[aria-pressed="true"], .universeControl button[aria-pressed="true"] { color: #fffef8; border-color: #476b37; background: #476b37; }
+.ruleOptions button:focus-visible, .universeControl button:focus-visible, .truthTable button:focus-visible { outline: 3px solid #87a858; outline-offset: 3px; }
+.ruleIntro { min-width: 0; margin: 1rem 0; padding: .9rem 1rem; background: #eef4e3; border-radius: 11px; }
+.ruleIntro h5 { display: flex; flex-wrap: wrap; align-items: baseline; gap: .5rem 1rem; margin: 0 0 .35rem; font-size: 1.15rem; }
+.ruleIntro code { font-size: 1.05rem; font-weight: 600; color: #617649; white-space: normal; }
+.ruleIntro p { margin: 0; }
+.workspace { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 1.15rem; align-items: start; }
+.figurePanel, .tablePanel { min-width: 0; }
+.figure { margin: 0; }
+.diagram { display: block; width: 100%; height: auto; }
+.figure figcaption { margin-top: .35rem; text-align: center; font-size: .95rem; color: #67765a; }
+.legend { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem 1.1rem; margin-top: .7rem; font-size: .95rem; }
+.legend span { display: flex; align-items: center; gap: .45rem; }
+.legend i { display: inline-block; width: 1rem; height: 1rem; border: 1px solid #9ca88e; border-radius: 3px; }
+.includedSwatch { background: #b9d69f; }
+.excludedSwatch { background: #fffef9; }
+.universeControl { margin-top: 1rem; padding: .8rem; border: 1px solid #dbe3d1; border-radius: 10px; }
+.universeControl strong { font-size: .98rem; }
+.universeControl > div { display: flex; flex-wrap: wrap; gap: .5rem; margin: .55rem 0; }
+.universeControl button { padding: .4rem .8rem; font-size: .97rem; }
+.universeControl p { margin: 0; color: #68785a; font-size: .95rem; line-height: 1.7; }
+.truthTable { width: 100%; border-collapse: collapse; font-size: .98rem; line-height: 1.6; }
+.truthTable caption { padding: .4rem 0 .7rem; text-align: left; font-size: 1rem; font-weight: 700; }
+.truthTable th, .truthTable td { padding: .7rem .45rem; border: 1px solid #d9e1cd; text-align: center; vertical-align: middle; }
+.truthTable thead th { background: #edf2e3; font-size: .96rem; }
+.truthTable th:first-child { width: 40%; }
+.truthTable button { width: 100%; border: 0; background: transparent; padding: .25rem; color: #425b34; font: inherit; font-weight: 650; cursor: pointer; }
+.truthTable button[aria-pressed="true"] { text-decoration: underline; text-underline-offset: .25em; }
+.activeRow { background: #f0f6e4; }
+.includedText { color: #426b2b; font-weight: 750; }
+.excludedText { color: #8a634b; }
+.selection { padding: .8rem; margin: .8rem 0; background: #f1f5e9; border-radius: 9px; font-size: 1rem; }
+.tableNote { font-size: .96rem; color: #697b5a; }
+.case { margin-top: 1.2rem; padding: 1rem; border: 1px solid #d9e4cb; border-radius: 11px; background: #f9fbf3; }
+.case h5 { margin: 0 0 .35rem; font-size: 1.1rem; }
+.case p { margin: 0; }
+.takeaways { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: .9rem; }
+.takeaways p { margin: 0; padding: .9rem 1rem; background: #f3f5ec; border-radius: 9px; font-size: .99rem; }
+@media (max-width: 780px) { .workspace { grid-template-columns: 1fr; } .figurePanel { max-width: 36rem; width: 100%; margin-inline: auto; } }
+@media (max-width: 470px) { .takeaways { grid-template-columns: 1fr; } .ruleOptions button { flex: 1 0 auto; padding: .55rem .65rem; } .truthTable th, .truthTable td { padding: .65rem .3rem; } .ruleIntro { padding: .8rem; } }

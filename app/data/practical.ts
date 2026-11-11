@@ -5,6 +5,12 @@ import { vectorizationLesson, vectorizationPracticalQuestions } from "./vectoriz
 import { rasterizationLesson, rasterizationPracticalQuestions } from "./rasterization";
 import { transformationLesson, transformationPracticalQuestions } from "./transformation";
 import { adjustmentErrorLesson, adjustmentErrorQuestions } from "./adjustment-error";
+import { ndviLesson, ndviQuestions } from "./ndvi";
+import { aerialPhotoLesson, aerialPhotoQuestions } from "./aerial-photo";
+import { classificationLesson, classificationQuestions } from "./data-classification";
+import { codeOutputLesson, codeOutputQuestions } from "./code-output";
+import { ogcLesson, ogcQuestions } from "./ogc-services";
+import { practicalSections } from "./practical-curriculum";
 export { practicalPastQuestions } from "./practical-past";
 
 export type PracticalQuestion = {
@@ -16,6 +22,8 @@ export type PracticalQuestion = {
   prompt: string;
   context?: string;
   code?: string;
+  codeLanguage?: "Python 3" | "Java" | "JavaScript";
+  trace?: { caption?: string; headers: string[]; rows: string[][] };
   hint: string;
   modelAnswer: string;
   explanation: string[];
@@ -49,6 +57,11 @@ export const practicalQuestions: PracticalQuestion[] = [
   ...rasterizationPracticalQuestions,
   ...transformationPracticalQuestions,
   ...adjustmentErrorQuestions,
+  ...ndviQuestions,
+  ...aerialPhotoQuestions,
+  ...classificationQuestions,
+  ...codeOutputQuestions,
+  ...ogcQuestions,
 ];
 
 export const allPracticalQuestions: PracticalQuestion[] = [...practicalPastQuestions, ...practicalQuestions];
@@ -76,6 +89,12 @@ const foundationLessons: Chapter[] = seeds.map((seed,index) => ({
   practical:{ answerTemplate:seed.answerTemplate, sourceIds:seed.sources },
 }));
 
-export const practicalLessons: Chapter[] = [
+const practicalLessonPool: Chapter[] = [
   foundationLessons[0], transformationLesson, adjustmentErrorLesson, foundationLessons[1], topologyLesson, ...foundationLessons.slice(2, 4), vectorizationLesson, rasterizationLesson, ...foundationLessons.slice(4),
-].map((lesson, index) => ({ ...lesson, number: String(index + 1).padStart(2, "0") }));
+  ndviLesson, aerialPhotoLesson, classificationLesson, codeOutputLesson, ogcLesson,
+];
+
+export const practicalLessons: Chapter[] = practicalSections.flatMap(section=>section.lessonIds.flatMap(id=>{
+  const lesson=practicalLessonPool.find(item=>item.id===id);
+  return lesson ? [lesson] : [];
+})).map((lesson, index) => ({ ...lesson, number: String(index + 1).padStart(2, "0") }));

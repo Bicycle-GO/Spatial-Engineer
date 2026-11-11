@@ -1,0 +1,129 @@
+.block {
+  min-width: 0;
+  margin-block: 1.15rem;
+  color: #2d4233;
+  font-size: 1rem;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.block *, .block *::before, .block *::after { box-sizing: border-box; }
+.block figure { min-width: 0; margin: 0; }
+.block figcaption { margin-top: .3rem; color: #52664c; text-align: center; font-size: .98rem; }
+.block figcaption strong, .block figcaption span { display: block; }
+.diagram { display: block; width: 100%; height: auto; }
+.sectionTitle, .exampleTitle { margin: 0 0 .85rem; font-size: 1.13rem; line-height: 1.5; }
+.note { margin: .8rem 0; font-size: 1rem; line-height: 1.8; color: #52634b; }
+.smallNote { font-size: .92rem; color: #58684f; line-height: 1.65; }
+
+.booleanExample { padding: 1rem; margin-top: 1rem; border: 1px solid #d9e3cf; border-radius: 14px; background: #fcfdf8; }
+.exampleTitle { display: inline-block; padding: .25rem .7rem; margin-bottom: .25rem; border-radius: 8px; background: #eef2e5; }
+.booleanRow { display: grid; grid-template-columns: minmax(0, 2fr) 1.2rem minmax(0, 1fr); align-items: center; gap: .5rem; }
+.inputPair { display: grid; grid-template-columns: minmax(0, 1fr) 1rem minmax(0, 1fr); align-items: center; gap: .25rem; }
+.mathSign { text-align: center; color: #6e8061; font-size: 1.5rem; line-height: 1; }
+.resultFigure { border-radius: 12px; background: #f0f5e7; padding-bottom: .5rem; }
+.choiceBox { display: flex; flex-wrap: wrap; align-items: center; gap: .65rem 1.2rem; padding: .85rem 1rem; margin-top: 1rem; border: 1px solid #d7dfce; border-radius: 12px; background: #f7f9f1; }
+.choiceBox strong { color: #60764e; }
+.choiceBox span { font-weight: 650; }
+
+.tableWrap { max-width: 100%; overflow-x: auto; }
+.accessTable, .ruleTable, .rasterGrid { width: 100%; border-collapse: collapse; background: #fffefb; font-variant-numeric: tabular-nums; }
+.accessTable caption, .ruleTable caption, .rasterGrid caption { padding: .6rem .4rem; margin-bottom: .4rem; color: #3e5635; text-align: left; font-size: 1.03rem; font-weight: 750; }
+.accessTable th, .accessTable td, .ruleTable th, .ruleTable td { padding: .65rem .75rem; border: 1px solid #d8dfcd; text-align: left; vertical-align: middle; }
+.accessTable thead th, .ruleTable thead th { background: #eef2e5; font-weight: 700; }
+.accessTable th:first-child { width: 3rem; text-align: center; }
+.accessTable th:last-child { width: 24%; }
+.blank { display: block; min-width: 3.2rem; padding-block: .2rem; color: #798471; border-bottom: 1px dashed #9ea88f; text-align: center; }
+
+.threeCards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; }
+.diagramCard { padding: .8rem; border: 1px solid #dbe4d1; border-radius: 14px; background: #fafcf5; }
+.diagramCard figcaption span { font-size: .95rem; }
+.rasterLayout { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 1.15rem; align-items: start; }
+.rasterLayout > div { min-width: 0; }
+.rasterGrid { table-layout: fixed; max-width: 22rem; }
+.rasterGrid td { width: 20%; height: 2.75rem; padding: .15rem; border: 1px solid #99a38e; text-align: center; font-size: 1.15rem; font-weight: 600; }
+.cellBlank { color: #b1baa6; font-weight: 400; }
+.ruleTable td { padding: .45rem .6rem; text-align: center; }
+.ruleTable th { padding: .5rem .6rem; text-align: center; font-size: .96rem; }
+
+.operatorChoices { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .65rem; }
+.operatorChoices > div { display: flex; align-items: center; justify-content: center; gap: .7rem; min-width: 0; padding: .9rem .4rem; border: 1px solid #d8e1cd; border-radius: 10px; background: #f7faf1; }
+.operatorChoices span { color: #6d7e60; }
+.operatorChoices code { color: #334f38; font-size: 1.35rem; font-weight: 700; }
+.overlayChoices { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .7rem; }
+.overlayChoices > div { padding: .8rem .65rem; border: 1px solid #d8e1cd; border-radius: 10px; text-align: center; background: #f8faf4; }
+.overlayChoices strong, .overlayChoices span { display: block; }
+.overlayChoices span { color: #64765a; font-size: .94rem; }
+.overlayGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.overlayCard { min-width: 0; padding: 1rem; border: 1px solid #dbe3d1; border-radius: 14px; background: #fbfcf6; }
+.overlayCard h5 { margin: 0; font-size: 1.1rem; }
+.overlayCard h5 span { margin-left: .25rem; color: #647856; font-size: .9rem; font-weight: 500; }
+.overlayCard p { margin: .5rem 0 0; font-size: 1rem; line-height: 1.75; }
+.attributeNote { padding-top: .65rem; border-top: 1px solid #dfe6d7; color: #5d7053; }
+
+.stageChoices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .7rem; }
+.stageChoices > div { display: flex; align-items: center; gap: .65rem; min-width: 0; padding: .85rem .8rem; border: 1px solid #dbe3d0; border-radius: 10px; background: #f6f9ef; }
+.stageChoices span { color: #718465; }
+.stageChoices strong { font-weight: 650; }
+.flow { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: .8rem 1.35rem; padding: 0; margin: 0; list-style: none; }
+.flow li { position: relative; display: flex; flex-direction: column; gap: .4rem; justify-content: center; align-items: center; min-width: 0; padding: .9rem .5rem; border-radius: 10px; background: #e9f0df; border: 1px solid #cddabf; text-align: center; }
+.flow li:not(:last-child)::after { content: "→"; position: absolute; right: -1.12rem; top: 50%; transform: translateY(-50%); color: #71865e; font-size: 1.2rem; }
+.flow span { color: #5b7949; }
+.flow strong { font-size: 1rem; font-weight: 650; }
+
+.surfaceLayout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 1.3rem; align-items: center; }
+.surfaceFigure { min-width: 0; }
+.surfaceDetails { min-width: 0; }
+.surfaceDetails section + section { margin-top: 1rem; }
+.surfaceDetails h5 { display: flex; align-items: center; gap: .55rem; margin: 0 0 .3rem; font-size: 1.08rem; }
+.surfaceDetails p { margin: 0; font-size: 1rem; line-height: 1.8; }
+.geoidKey, .ellipsoidKey { display: inline-block; width: 1.6rem; flex-shrink: 0; border-top: 3px solid #3f7e99; }
+.ellipsoidKey { border-top: 3px dashed #9b7148; }
+.sqlGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: .9rem; }
+.sqlCard { min-width: 0; padding: 1rem; border: 1px solid #d9e2ce; border-radius: 13px; background: #fafcf6; }
+.sqlCard h5 { margin: 0 0 .8rem; font-size: 1.08rem; }
+.sqlCard p { margin: .75rem 0; font-size: 1rem; }
+.sqlCard table { width: 100%; border-collapse: collapse; font-size: .95rem; }
+.sqlCard caption { margin-bottom: .45rem; text-align: left; color: #647558; }
+.sqlCard th, .sqlCard td { border: 1px solid #d2ddc7; padding: .45rem; text-align: left; }
+.sqlCard th { background: #edf2e5; }
+.sqlCard code { display: block; font-size: .94rem; line-height: 1.8; color: #536d44; white-space: normal; overflow-wrap: anywhere; }
+.sqlHighlight { background: #dfecc9; font-weight: 700; }
+.sqlFields { display: flex; flex-wrap: wrap; gap: .5rem; padding: 1rem .6rem; border: 1px dashed #acb99c; border-radius: 8px; }
+.sqlFields span { border: 1px solid #ccd8c0; padding: .3rem .5rem; background: #f1f5e9; border-radius: 6px; }
+.sqlFields .sqlNewField { border-style: dashed; border-color: #83a36d; background: #e0edce; }
+
+@media (max-width: 850px) {
+  .flow { grid-template-columns: 1fr; gap: 1.15rem; }
+  .flow li { flex-direction: row; justify-content: flex-start; gap: .75rem; padding: .85rem 1rem; text-align: left; }
+  .flow li:not(:last-child)::after { content: "↓"; top: 100%; right: 48%; transform: none; line-height: 1.1rem; }
+}
+
+@media (max-width: 700px) {
+  .booleanRow { grid-template-columns: minmax(0, 2fr) 1rem minmax(0, 1fr); gap: .25rem; }
+  .booleanExample { padding: .75rem; }
+  .threeCards { grid-template-columns: 1fr; }
+  .diagramCard { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: .7rem; }
+  .overlayChoices { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .operatorChoices { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .stageChoices { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .surfaceLayout { grid-template-columns: 1fr; }
+  .surfaceFigure { max-width: 30rem; width: 100%; margin-inline: auto !important; }
+  .accessTable th, .accessTable td { padding: .55rem .45rem; font-size: .97rem; }
+  .accessTable th:last-child { width: 28%; }
+}
+
+@media (max-width: 470px) {
+  .booleanRow { grid-template-columns: 1fr; gap: .5rem; }
+  .booleanRow > .mathSign { line-height: 1; }
+  .resultFigure { max-width: 12rem; width: 100%; justify-self: center; }
+  .overlayGrid { grid-template-columns: 1fr; }
+  .diagramCard { grid-template-columns: 1fr; }
+  .diagramCard .diagram { width: 100%; max-width: 16rem; margin-inline: auto; }
+  .operatorChoices { gap: .5rem; }
+  .operatorChoices > div { gap: .4rem; }
+  .stageChoices { grid-template-columns: 1fr; }
+  .accessTable th:first-child { width: 2rem; }
+  .accessTable th:last-child { width: 27%; }
+  .accessTable th, .accessTable td { padding: .5rem .35rem; font-size: .94rem; }
+}

@@ -1,0 +1,22 @@
+.guide { margin: 30px 0; padding: 24px; border: 1px solid #dbe4cf; border-radius: 14px; background: #fcfdf8; min-width: 0; font-size: 18px; line-height: 1.85; }
+.guide h4 { margin: 0 0 18px; font-size: 22px; line-height: 1.6; }
+.guide h5 { margin: 0 0 12px; font-size: 19px; line-height: 1.6; }
+.guide p { margin: 12px 0; font-size: 17px; line-height: 1.9; overflow-wrap: anywhere; }
+.cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.cards article { min-width: 0; border: 1px solid #dfe6d4; padding: 20px; background: #fff; border-radius: 12px; }
+.note { padding: 16px 18px; margin-top: 20px !important; border-left: 3px solid #a4b88d; background: #f1f5e9; color: #4c6240; }
+.flow { display: grid; gap: 9px; margin: 18px 0; }
+.flow span { padding: 12px 16px; border: 1px solid #d5dfc7; border-radius: 8px; background: #f1f5e8; }
+.flow b { font-size: 15px; font-weight: 600; color: #607351; padding-left: 14px; }
+.english { display: block; font-size: 15px; color: #657259; overflow-wrap: anywhere; }
+.symbol { display: block; font-size: 32px; color: #5b8050; }
+.options { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0; }
+.options button { padding: 12px 16px; border: 1px solid #c5d3b5; border-radius: 8px; background: #fff; color: #49613a; font: inherit; font-weight: 700; cursor: pointer; }
+.options button[aria-pressed="true"] { color: #fff; background: #527142; }
+.options button:focus-visible { outline: 3px solid #8971bb; outline-offset: 3px; }
+.resample { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.4fr); gap: 24px; align-items: start; }
+.samples { width: 100%; border-collapse: collapse; background: #fff; font-variant-numeric: tabular-nums; }
+.samples caption { text-align: left; font-size: 15px; padding-bottom: 12px; }
+.samples td { border: 1px solid #bac9ad; padding: 12px 4px; text-align: center; font-size: 19px; }
+.samples td[data-selected="true"] { background: #d4e5bc; color: #2e4e22; font-weight: 750; }
+@media (max-width: 700px) { .cards, .resample { grid-template-columns: 1fr; } .guide { padding: 18px; } .guide h4 { font-size: 20px; } .guide p { font-size: 17px; } .samples { max-width: 360px; } }

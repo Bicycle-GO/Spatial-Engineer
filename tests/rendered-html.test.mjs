@@ -7,6 +7,13 @@ import test from "node:test";
 const output = new URL("../out/", import.meta.url);
 const html = (path = "") => readFile(new URL(`${path}index.html`, output), "utf8");
 
+async function studyData(filename) {
+  const ts=await import("typescript");
+  const source=await readFile(new URL(`../app/data/${filename}`,import.meta.url),"utf8");
+  const {outputText}=ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}});
+  return import(`data:text/javascript;base64,${Buffer.from(outputText).toString("base64")}`);
+}
+
 test("home links to independent theory and practice pages for both tracks", async () => {
   const page = await html();
   assert.match(page, /공간정보융합산업기사/);
@@ -21,7 +28,7 @@ test("home links to independent theory and practice pages for both tracks", asyn
 });
 
 test("all chapter pages export, with readable theory separate from question controls", async () => {
-  for (const [track, count] of [["engineer", 39], ["technician", 19]]) {
+  for (const [track, count] of [["engineer", 44], ["technician", 19]]) {
     const list = await html(`${track}/theory/`);
     const chapters = await readdir(new URL(`${track}/theory/`, output), { withFileTypes: true });
     const dirs = [];
@@ -40,7 +47,7 @@ test("all chapter pages export, with readable theory separate from question cont
       assert.ok(page.includes(`practice/${exam}?chapter=${directory.name}`));
       assert.doesNotMatch(page, /<input[^>]*type="radio"/);
     }
-    assert.ok(list.replace(/<!--.*?-->/gs, "").includes(`그림으로 배우는 핵심 ${track === "engineer" ? 17 : 12}`));
+    assert.ok(list.replace(/<!--.*?-->/gs, "").includes(`그림으로 배우는 핵심 ${track === "engineer" ? 21 : 12}`));
     const featured = track === "engineer" ? "practical-crs" : "overlay-analysis";
     assert.ok(list.includes(`href="/Spatial-Engineer/${track}/theory/${featured}/"`));
   }
@@ -74,9 +81,10 @@ test("engineer exam hub separates written choices from practical answer writing"
   assert.match(page, /모범답안과 비교/);
   assert.match(page, /공식 기출·채점 기준이 아닙니다/);
   assert.doesNotMatch(page, /<input[^>]*type="radio"/);
-  for (const id of ["crs","quality","topology","overlay","raster","vectorization","rasterization","transformation","adjustment-error","sql","code","cartography","validation"]) {
+  for (const id of ["crs","quality","topology","overlay","raster","vectorization","rasterization","transformation","adjustment-error","sql","code","cartography","validation","ndvi","aerial-photo","classification","ogc","code-output"]) {
     const lesson = await html(`engineer/theory/practical-${id}/`);
-    assert.match(lesson, id === "adjustment-error" ? /class="residual-error-visual"/ : ["topology","vectorization","rasterization","transformation"].includes(id) ? new RegExp(`class="${id}-explorer"`) : /이렇게 답안으로 연결해요/);
+    const visualClasses={"adjustment-error":"residual-error-visual",ndvi:"ndvi-explorer","aerial-photo":"aerial-photo-visual",classification:"classification-explorer",ogc:"ogc-services-explorer"};
+    assert.match(lesson, visualClasses[id] ? new RegExp(`class="${visualClasses[id]}"`) : ["topology","vectorization","rasterization","transformation"].includes(id) ? new RegExp(`class="${id}-explorer"`) : /이렇게 답안으로 연결해요/);
     assert.ok(lesson.includes(`practice/practical/?chapter=practical-${id}`));
     assert.match(lesson, /학습 자료와 참고 출처/);
   }
@@ -130,6 +138,89 @@ test("adjustment review distinguishes point residuals from an overall RMS measur
   assert.match(page, /점 하나의 차이/);
   assert.match(page, /여러 점의 RMS/);
   assert.ok(page.includes(`practice/practical/?chapter=${lesson.id}`));
+});
+
+test("authored code exercises retain full runnable programs, exact output and complete traces", async () => {
+  const {codeOutputQuestions:questions,codeOutputValidationCases:cases}=await studyData("code-output.ts");
+  assert.equal(questions.length,6);
+  assert.equal(cases.length,6);
+  assert.equal(new Set(cases.map(sample=>sample.questionId)).size,6);
+  assert.deepEqual(cases.map(sample=>sample.language).sort(),["java","java","python","python","python","python"]);
+  for(const sample of cases){
+    const question=questions.find(item=>item.id===sample.questionId);
+    assert.equal(question.code,sample.source);
+    assert.equal(question.modelAnswer,sample.expectedStdout.trimEnd());
+    assert.ok(question.trace.rows.every(row=>row.length===question.trace.headers.length));
+    assert.ok(question.codeLanguage && !question.provenance);
+  }
+  const page=await html("engineer/theory/practical-code-output/");
+  assert.match(page,/음의 무한대/);
+  assert.ok(page.includes("practice/practical/?chapter=practical-code-output"));
+});
+
+test("NDVI and OGC name questions keep their scope precise without exposing the OGC answer", async () => {
+  const {ndviQuestions:ndvi}=await studyData("ndvi.ts");
+  const {ogcQuestions:ogc,ogcServices:services,ogcLesson}=await studyData("ogc-services.ts");
+  assert.equal(ndvi[0].format,"단답형");
+  assert.match(ndvi[0].prompt,/근적외선 밴드와 적색 밴드/);
+  assert.match(ndvi[0].modelAnswer,/정규화 식생지수\(NDVI/);
+  assert.match(ndvi[1].modelAnswer,/0\.50/);
+  assert.ok(ndvi[2].modelAnswer.includes("분모") && ndvi[2].modelAnswer.includes("결측"));
+  assert.deepEqual(services.map(service=>service.id),["WMS","WFS","WCS","WPS"]);
+  assert.match(ogc[0].prompt,/서비스 4가지를 나열/);
+  assert.doesNotMatch(ogc[0].context,/\b(?:WMS|WFS|WCS|WPS)\b/);
+  assert.ok(ogcLesson.guide.pitfalls.some(text=>text.includes("WMTS")));
+  const page=await html("engineer/theory/practical-ndvi/");
+  assert.equal((page.match(/type="range"/g) ?? []).length,2);
+  assert.match(page,/NDVI = 0.50/);
+  const {sources}=await studyData("sources.ts");
+  const {classificationQuestions}=await studyData("data-classification.ts");
+  const {aerialPhotoQuestions}=await studyData("aerial-photo.ts");
+  const {codeOutputQuestions}=await studyData("code-output.ts");
+  const all=[...ndvi,...ogc,...classificationQuestions,...aerialPhotoQuestions,...codeOutputQuestions];
+  assert.equal(all.length,24);
+  assert.equal(new Set(all.map(question=>question.id)).size,24);
+  for(const question of all){
+    assert.equal(question.provenance,undefined);
+    for(const id of question.referenceIds ?? []) assert.ok(sources[id]?.url,`${question.id} has missing source ${id}`);
+  }
+});
+
+test("classification compares identical values and verifies the stated SSE optimum independently", async () => {
+  const {classificationValues:values,classificationMethods:methods,classificationGroups:groups,classificationQuestions:questions,classificationOverlap}=await studyData("data-classification.ts");
+  const counts={equal:[4,7,1],maximum:[1,10,1],optimal:[5,6,1],quantile:[4,4,4],natural:[1,10,1]};
+  for(const method of methods){
+    assert.deepEqual(groups(method).map(group=>group.length),counts[method.id]);
+    assert.deepEqual(groups(method).flat(),values);
+  }
+  const cost=group=>group.reduce((total,value)=>total+value*value,0)-group.reduce((total,value)=>total+value,0)**2/group.length;
+  let minimum=Infinity;
+  for(let a=1;a<values.length-1;a++)for(let b=a+1;b<values.length;b++)minimum=Math.min(minimum,cost(values.slice(0,a))+cost(values.slice(a,b))+cost(values.slice(b)));
+  const optimal=groups(methods.find(method=>method.id==="optimal")).reduce((sum,group)=>sum+cost(group),0);
+  assert.ok(Math.abs(minimum-46.7)<1e-8);
+  assert.ok(Math.abs(optimal-minimum)<1e-8);
+  assert.equal(questions.length,7);
+  assert.match(classificationOverlap,/Jenks/);
+  const page=await html("engineer/theory/practical-classification/");
+  assert.match(page,/class="classification-plot-scroll"/);
+  assert.match(page,/등간격 분류법/);
+});
+
+test("vertical aerial-photo calculations use matched height references and unit conversions", async () => {
+  const {aerialPhotoExample:e,aerialPhotoQuestions:questions}=await studyData("aerial-photo.ts");
+  assert.equal(e.focalLengthMm/1000,e.focalLengthM);
+  assert.equal(e.flightElevationM-e.groundElevationM,e.heightAboveGroundM);
+  assert.equal(e.heightAboveGroundM/e.focalLengthM,e.scaleDenominator);
+  assert.equal(e.photoDistanceCm*e.scaleDenominator/100,e.groundDistanceM);
+  assert.equal(e.photoSideCm*e.scaleDenominator/100,e.groundSideM);
+  assert.equal(e.groundSideM*(1-e.forwardOverlap),e.airBaseM);
+  assert.equal(e.groundSideM**2/1e6,e.footprintAreaKm2);
+  assert.equal(questions.length,5);
+  assert.ok(questions.every(question=>question.format==="계산형" && !question.provenance));
+  assert.match(questions[0].context,/같은 평균해수면 기준/);
+  const page=await html("engineer/theory/practical-aerial-photo/");
+  assert.match(page,/class="aerial-photo-diagram"/);
+  assert.ok(page.includes("practice/practical/?chapter=practical-aerial-photo"));
 });
 
 test("line drawing vectorization explains thinning without conflating it with vector output", async () => {
@@ -257,6 +348,122 @@ test("the three user-provided practical questions retain scope and provenance", 
   assert.doesNotMatch(questions[2].modelAnswer, /헬머트|아핀/);
   const lesson = await html("engineer/theory/spatial-basics/");
   assert.ok(lesson.includes("source=past&amp;chapter=spatial-basics"));
+});
+
+test("technician image questions retain all fourteen original response tasks with corrected explanations", async () => {
+  const {technicianPastQuestions: questions, technicianPastSourceNote: note} = await studyData("technician-past.ts");
+  assert.deepEqual(questions.map(question => question.number), Array.from({length:14}, (_, index) => index + 1));
+  assert.equal(new Set(questions.map(question => question.id)).size, 14);
+  assert.match(note, /시행 연도·회차와 공식 원문은 미확인/);
+  assert.deepEqual(questions.map(question => question.format), ["단답형","단답형","단답형","격자형","순서형","연결형","순서형","서술형","단답형","코드형","단답형","단답형","단답형","단답형"]);
+  for (const question of questions) {
+    assert.ok(question.prompt && question.hint && question.modelAnswer);
+    assert.ok(question.explanation.length >= 3 && question.criteria.length >= 2 && question.mistakes.length);
+    if (question.theoryChapterId) await access(new URL(`technician/theory/${question.theoryChapterId}/index.html`, output));
+    if (question.trace) assert.ok(question.trace.rows.every(row => row.length === question.trace.headers.length));
+  }
+  assert.match(questions[1].modelAnswer, /package-private/);
+  assert.ok(questions[1].explanation.some(text => text.includes("생략")));
+  assert.ok(questions[7].explanation.some(text => text.includes("일정") && text.includes("0")));
+  assert.ok(questions[7].explanation.some(text => text.includes("양수") && text.includes("음수")));
+  assert.match(questions[8].prompt, /SQL/);
+  assert.match(questions[9].code, /System\.out\.println\(x \+ "," \+ y \+ "," \+ z\)/);
+  assert.match(questions[9].modelAnswer, /출력: 2,3,2/);
+  assert.deepEqual(questions[9].trace.rows.at(-1).slice(1), ["2","3","2"]);
+  const home = await html();
+  assert.ok(home.includes("/technician/practice/?source=past"));
+  const room = await html("technician/practice/");
+  assert.match(room.replace(/<!--.*?-->/gs, ""), /기출문제<span>34<\/span>/);
+});
+
+test("technician extensions retain requested Clip wording and precise new concept answers", async () => {
+  const {technicianPastQuestions: questions} = await studyData("technician-past.ts");
+  assert.equal(questions[5].context[1], "② 한 피처 클래스의 경계를 따라 다른 피처 클래스의 일부를 제거하는 기능으로 필요 없는 부분을 잘라내어 필요한 부분만 남기고 싶을때 유용하다.");
+  assert.match(questions[5].modelAnswer, /② 자르기\(Clip\)/);
+  assert.match(questions[10].modelAnswer, /점\(Point\), 선\(Line\), 면\(Polygon\)/);
+  assert.equal(questions[11].modelAnswer, "지오코딩(Geocoding)");
+  assert.ok(questions[11].explanation.some(text => text.includes("역지오코딩")));
+  assert.match(questions[12].modelAnswer, /UTM/);
+  assert.ok(questions[12].context.some(text => text.includes("1947년에 채택")));
+  assert.ok(questions[12].explanation.some(text => text.includes("노르웨이") && text.includes("예외")));
+  assert.match(questions[13].modelAnswer, /메타데이터/);
+  assert.ok(questions[0].explanation.some(text => text.includes("NOT A") && text.includes("U")));
+  assert.ok(questions[1].explanation.some(text => text.includes("설계도") && text.includes("객체")));
+  assert.ok(questions[4].explanation.some(text => text.includes("미리 정해")));
+});
+
+test("technician raster answer remaps every original cell without moving its position", async () => {
+  const {technicianPastQuestions: questions} = await studyData("technician-past.ts");
+  const original = [[1,3,5,1,4],[7,7,4,9,8],[9,10,11,11,12],[15,17,18,16,18],[20,21,23,21,22]];
+  const intervals = [[1,4,3],[5,9,2],[10,13,1],[14,18,6],[19,22,5],[23,Infinity,4]];
+  const expected = original.map(row => row.map(value => intervals.find(([min,max]) => value >= min && value <= max)[2]));
+  const actual = questions[3].modelAnswer.trim().split("\n").map(row => row.trim().split(/\s+/).map(Number));
+  assert.deepEqual(actual, expected);
+});
+
+test("the second technician paper has twenty independent items without changing first-paper IDs", async () => {
+  const {technicianPastQuestions: first} = await studyData("technician-past.ts");
+  const {technicianSecondQuestions: second, technicianSecondSourceNote: note} = await studyData("technician-past-second.ts");
+  assert.equal(second.length,20);
+  assert.deepEqual(second.map(question=>question.number),Array.from({length:20},(_,index)=>index+1));
+  assert.equal(new Set([...first,...second].map(question=>question.id)).size,34);
+  assert.match(note,/공식 시행 회차를 뜻하지/);
+  for(const question of second) {
+    assert.ok(question.prompt && question.hint && question.modelAnswer);
+    assert.ok(question.explanation.length>=3 && question.criteria.length>=2 && question.mistakes.length);
+    if(question.theoryChapterId) await access(new URL(`technician/theory/${question.theoryChapterId}/index.html`,output));
+  }
+  assert.match(second[0].modelAnswer,/201/);
+  assert.match(second[10].modelAnswer,/100/);
+  assert.match(second[10].modelAnswer,/110/);
+  assert.doesNotMatch(second[10].modelAnswer,/111\.3/);
+  assert.match(second[15].modelAnswer,/AND NOT B/);
+  assert.ok(second[5].explanation.some(text=>text.includes("배경")));
+  assert.ok(second[14].modelAnswer.includes("근접") && second[14].modelAnswer.includes("중첩"));
+  const home=await html();
+  assert.ok(home.includes("source=past&amp;paper=2"));
+});
+
+test("second-paper median, mean, Boolean and moving maximum answers are independently calculated", async () => {
+  const data=await studyData("technician-past-second.ts");
+  assert.deepEqual(data.technicianSecondMedianInput,[[202,210,235],[201,100,196],[168,200,208]]);
+  const ordered=data.technicianSecondMedianInput.flat().toSorted((a,b)=>a-b);
+  assert.deepEqual(ordered,[100,168,196,200,201,202,208,210,235]);
+  assert.equal(data.technicianSecondMedian(ordered),201);
+  const meanValues=data.technicianSecondMedianMeanInput.flat();
+  assert.equal(meanValues.length,9);
+  assert.equal(meanValues.reduce((sum,value)=>sum+value,0),990);
+  assert.equal(data.technicianSecondMedian(meanValues),100);
+  assert.deepEqual(data.technicianSecondBooleanOutputs,{
+    and:[[0,0,0],[1,1,0],[0,0,0]],
+    or:[[1,1,0],[1,1,0],[1,0,0]],
+    xor:[[1,1,0],[0,0,0],[1,0,0]],
+  });
+  const source=data.technicianSecondMaxInput;
+  const calculated=Array.from({length:3},()=>Array(3).fill(-Infinity));
+  for(let row=0;row<3;row++) for(let column=0;column<3;column++) {
+    for(let dy=0;dy<3;dy++) for(let dx=0;dx<3;dx++) {
+      calculated[row][column]=Math.max(calculated[row][column],source[row+dy][column+dx]);
+    }
+  }
+  assert.deepEqual(calculated,[[7,7,9],[9,8,9],[9,8,9]]);
+  assert.deepEqual(data.technicianSecondMaxOutput,calculated);
+});
+
+test("second-paper reclassification preserves all sixty-four cells and nearest samples give unique answers", async () => {
+  const data=await studyData("technician-past-second.ts");
+  const input=data.technicianSecondReclassInput;
+  assert.equal(input.length,8);
+  assert.ok(input.every(row=>row.length===8));
+  const map=value=>value<=5?3:value<=9?2:value<=13?1:value<=20?4:value<=25?5:6;
+  assert.deepEqual(data.technicianSecondReclassOutput,input.map(row=>row.map(map)));
+  for(const value of [1,5,6,9,10,13,14,20,21,25,26]) assert.equal(data.technicianSecondReclassify(value),map(value));
+  const nearest=data.technicianSecondNearestTargets.map(target=>{
+    const distances=data.technicianSecondNearestSamples.map(sample=>({...sample,distance:Math.hypot(sample.row-target.row,sample.column-target.column)})).sort((a,b)=>a.distance-b.distance);
+    assert.ok(distances[0].distance<distances[1].distance);
+    return distances[0].value;
+  });
+  assert.deepEqual(nearest,[120,90,40]);
 });
 
 test("the twelve visual lessons render controls and source attribution in both tracks", async () => {

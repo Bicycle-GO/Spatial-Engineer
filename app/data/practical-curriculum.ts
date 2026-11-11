@@ -23,6 +23,8 @@ export const practicalSections: PracticalSection[] = [
       "practical-topology",
       "practical-overlay",
       "practical-raster",
+      "practical-ndvi",
+      "practical-aerial-photo",
       "practical-vectorization",
       "practical-rasterization",
     ],
@@ -32,14 +34,14 @@ export const practicalSections: PracticalSection[] = [
     number: "02",
     title: "공간정보서비스 프로그래밍",
     description: "SQL과 코드를 읽고, 데이터 조회와 서비스의 처리 흐름을 설명합니다.",
-    lessonIds: ["practical-sql", "practical-code"],
+    lessonIds: ["practical-sql", "practical-code", "practical-code-output", "practical-ogc"],
   },
   {
     id: "content",
     number: "03",
     title: "공간정보 융합콘텐츠 개발",
     description: "지도 표현을 익히고, 요구사항·테스트·성과물 검수까지 연결합니다.",
-    lessonIds: ["practical-cartography", "practical-validation"],
+    lessonIds: ["practical-cartography", "practical-classification", "practical-validation"],
   },
 ];
 

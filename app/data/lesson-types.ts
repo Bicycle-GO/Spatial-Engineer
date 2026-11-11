@@ -1,4 +1,4 @@
-export type VisualKind = "projections" | "coordinates" | "modeling" | "topology" | "topology-rules" | "vectorization" | "rasterization" | "transformation" | "residual-error" | "overlay" | "interpolation" | "resolution" | "image-errors" | "relation" | "operators" | "requirements" | "testing";
+export type VisualKind = "projections" | "coordinates" | "modeling" | "topology" | "topology-rules" | "vectorization" | "rasterization" | "transformation" | "residual-error" | "ndvi" | "ogc-services" | "classification" | "aerial-photo" | "overlay" | "interpolation" | "resolution" | "image-errors" | "relation" | "operators" | "requirements" | "testing";
 
 export type LessonGuide = {
   visual: VisualKind;

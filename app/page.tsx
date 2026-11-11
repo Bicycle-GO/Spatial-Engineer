@@ -4,6 +4,7 @@ import { Icon } from "./components/icons";
 import { Terrain } from "./components/terrain";
 import { TrackProgress } from "./components/study-progress";
 import { allPracticalQuestions } from "./data/practical";
+import { technicianPastPapers, technicianPastQuestionCount } from "./data/technician-past-papers";
 
 export default function Home() {
   return <main id="main-content" className="home-page container">
@@ -26,9 +27,10 @@ export default function Home() {
           <h3>{track.title}</h3>
           <p className="track-description">{track.description}</p>
           <div className="topic-tags">{track.topics.map(topic => <span key={topic}>{topic}</span>)}</div>
-          <div className="track-metrics"><span><Icon name="book" size={17}/>{getChapters(track).length}개 이론 챕터</span><span><Icon name="quiz" size={17}/>{getQuestions(track).length + (track.id === "engineer" ? allPracticalQuestions.length : 0)}개 학습문제</span></div>
+          <div className="track-metrics"><span><Icon name="book" size={17}/>{getChapters(track).length}개 이론 챕터</span><span><Icon name="quiz" size={17}/>{getQuestions(track).length + (track.id === "engineer" ? allPracticalQuestions.length : technicianPastQuestionCount)}개 학습문제</span></div>
           <div className="track-actions"><Link className="button primary" href={`/${track.id}/theory/`}><Icon name="book" size={20}/>기본이론 <Icon name="arrow" size={18}/></Link><Link className="button secondary" href={`/${track.id}/practice/`}><Icon name="quiz" size={20}/>기출문제 풀이 <Icon name="arrow" size={18}/></Link></div>
           {track.id === "engineer" && <div className="track-exam-links"><Link href="/engineer/practice/written/">필기 객관식 {getQuestions(track).length}문제 ↗</Link><Link href="/engineer/practice/practical/">실기 필답형 {allPracticalQuestions.length}문제 ↗</Link></div>}
+          {track.id === "technician" && <div className="track-exam-links">{technicianPastPapers.map(paper => <Link key={paper.id} href={`/technician/practice/?source=past${paper.id === "1" ? "" : `&paper=${paper.id}`}`}>{paper.label} {paper.questions.length}문제 ↗</Link>)}</div>}
           <TrackProgress trackId={track.id} chapterIds={getChapters(track).map(chapter => chapter.id)} />
         </article>)}
       </div>

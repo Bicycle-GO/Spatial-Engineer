@@ -2,6 +2,7 @@
 
 import { useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import type { LearningQuestion } from "../data/lesson-types";
 import type { TrackId } from "../data/tracks";
 import { sources } from "../data/sources";
@@ -10,6 +11,7 @@ import { ClipQuestionDiagram } from "./lesson-visuals";
 import { ExamNavigation } from "./exam-navigation";
 
 type Question = LearningQuestion;
+const TechnicianPastRoom = dynamic(() => import("./technician-past-room").then(module => module.TechnicianPastRoom));
 function subscribeLocation(callback: () => void) {
   window.addEventListener("popstate", callback);
   return () => window.removeEventListener("popstate", callback);
@@ -17,23 +19,27 @@ function subscribeLocation(callback: () => void) {
 const getSearch = () => window.location.search;
 const getServerSearch = () => "";
 
-export function PracticeRoom({ trackId, questions }: { trackId: TrackId; questions: Question[] }) {
+export function PracticeRoom({ trackId, questions, pastQuestionCount = 0 }: { trackId: TrackId; questions: Question[]; pastQuestionCount?: number }) {
   const search = useSyncExternalStore(subscribeLocation, getSearch, getServerSearch);
-  const chapter = new URLSearchParams(search).get("chapter") ?? "";
-  return <PracticeContent key={`${trackId}-${chapter}`} trackId={trackId} questions={questions} initialChapter={chapter}/>;
+  const params = new URLSearchParams(search);
+  const chapter = params.get("chapter") ?? "";
+  const source = params.get("source");
+  const number = Number(params.get("question")) || 1;
+  const paper = params.get("paper");
+  return <PracticeContent key={`${trackId}-${chapter}-${source}-${number}-${paper}`} trackId={trackId} questions={questions} initialChapter={chapter} initialSource={source} initialNumber={number} initialPaper={paper} pastQuestionCount={pastQuestionCount}/>;
 }
 
-function PracticeContent({ trackId, questions, initialChapter }: { trackId: TrackId; questions: Question[]; initialChapter: string }) {
+function PracticeContent({ trackId, questions, initialChapter, initialSource, initialNumber, initialPaper, pastQuestionCount }: { trackId: TrackId; questions: Question[]; initialChapter: string; initialSource: string | null; initialNumber: number; initialPaper: string | null; pastQuestionCount: number }) {
   const initialQuestion = questions.find(question => question.chapterId === initialChapter);
-  const [source, setSource] = useState<string>(initialQuestion?.kind ?? "shared");
+  const [source, setSource] = useState<string>(["past", "practice", "shared"].includes(initialSource ?? "") ? initialSource! : initialQuestion?.kind ?? "shared");
   const [category, setCategory] = useState(initialQuestion?.category ?? "all");
   const available = questions.filter(question => question.kind === source);
   const filtered = category === "all" ? available : available.filter(question => question.category === category);
   return <>
     {trackId === "engineer" && <ExamNavigation current="written"/>}
     <div className="page-heading"><span className="eyebrow">PUT KNOWLEDGE INTO PRACTICE</span><h1>{trackId === "engineer" ? "필기 기출·예상문제" : "기출문제 풀이"}</h1><p>한 문제씩 풀고, 해설로 개념을 완성하세요.</p></div>
-    <div className="practice-sources" aria-label="문제 유형">{[{id:"shared",label:"대화 속 문제"},{id:"practice",label:"예상문제"},{id:"past",label:"기출문제"}].map(item => <button key={item.id} aria-pressed={source === item.id} onClick={() => { setSource(item.id); setCategory("all"); }}>{item.label}<span>{questions.filter(question => question.kind === item.id).length}</span></button>)}</div>
-    {source === "past" ? <div className="empty-state"><Icon name="quiz" size={38}/><h2>등록된 기출문제가 없어요.</h2><p>출처와 회차가 확인된 기출문제는 아직 등록되지 않았습니다.<br/>대화 속 문제와 예상문제로 개념을 점검해 보세요.</p><button className="button primary" onClick={() => { setSource("shared"); setCategory("all"); }}>대화 속 문제 풀기 <Icon name="arrow" size={18}/></button></div> : <>
+    <div className="practice-sources" aria-label="문제 유형">{[{id:"shared",label:"대화 속 문제"},{id:"practice",label:"예상문제"},{id:"past",label:"기출문제"}].map(item => <button key={item.id} aria-pressed={source === item.id} onClick={() => { setSource(item.id); setCategory("all"); }}>{item.label}<span>{item.id === "past" ? pastQuestionCount : questions.filter(question => question.kind === item.id).length}</span></button>)}</div>
+    {source === "past" ? trackId === "technician" && pastQuestionCount > 0 ? <TechnicianPastRoom initialNumber={initialNumber} initialPaper={initialPaper}/> : <div className="empty-state"><Icon name="quiz" size={38}/><h2>등록된 기출문제가 없어요.</h2><p>출처와 회차가 확인된 기출문제는 아직 등록되지 않았습니다.<br/>대화 속 문제와 예상문제로 개념을 점검해 보세요.</p><button className="button primary" onClick={() => { setSource("shared"); setCategory("all"); }}>대화 속 문제 풀기 <Icon name="arrow" size={18}/></button></div> : <>
       <p className="source-notice"><span>{source === "shared" ? "대화 속 문제 안내" : "예상문제 안내"}</span>{source === "shared" ? "공유 대화의 문항을 학습용으로 재구성했습니다. 시행 연도·회차가 확인된 실제 기출문제가 아닙니다." : "현재 문항은 학습용으로 구성한 예상문제이며, 실제 기출문제가 아닙니다."}</p>
       <div className="practice-toolbar"><label htmlFor="question-category">학습 주제</label><select id="question-category" value={category} onChange={event => setCategory(event.target.value)}><option value="all">전체 주제 ({available.length}문제)</option>{[...new Set(available.map(question => question.category))].map(item => <option key={item} value={item}>{item}</option>)}</select></div>
       {filtered.length > 0 ? <QuizSession key={`${source}-${category}`} questions={filtered} trackId={trackId}/> : <div className="empty-state"><h2>이 주제의 문제를 준비 중이에요.</h2><button className="button secondary" onClick={() => setCategory("all")}>전체 문제 보기</button></div>}

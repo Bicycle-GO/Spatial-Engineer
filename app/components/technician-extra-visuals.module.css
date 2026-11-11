@@ -1,0 +1,61 @@
+.guide { min-width: 0; margin-block: 1.15rem; color: #334931; font-size: 1.02rem; line-height: 1.75; overflow-wrap: anywhere; }
+.guide *, .guide *::before, .guide *::after { box-sizing: border-box; }
+.guide h4 { margin: 0 0 1rem; font-size: 1.25rem; line-height: 1.5; }
+.guide h5 { margin: .4rem 0 .6rem; font-size: 1.1rem; line-height: 1.55; }
+.guide figure { min-width: 0; margin: 0; }
+.diagram { display: block; width: 100%; height: auto; }
+.guide figcaption { color: #647953; font-size: .96rem; }
+.note { margin-top: 1rem; padding: .85rem 1rem; border-radius: 10px; background: #f0f4e8; color: #637653; font-size: 1rem; }
+.vectorGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .9rem; }
+.card { min-width: 0; padding: .9rem; border: 1px solid #d5e0c7; border-radius: 13px; background: #fbfdf6; }
+.card figcaption { margin-top: .6rem; text-align: center; }
+.card figcaption strong { display: block; margin-bottom: .2rem; color: #3d5c2f; font-size: 1.12rem; }
+.card figcaption span { display: block; color: #657b55; font-size: 1rem; }
+.card p { margin: .65rem 0 0; color: #596e4a; font-size: 1rem; line-height: 1.75; }
+.geocodingFlow { display: grid; grid-template-columns: minmax(0, 1fr) 1rem minmax(0, 1fr) 1rem minmax(0, 1fr); gap: .65rem; align-items: stretch; }
+.stageLabel { display: block; margin-bottom: .65rem; color: #6b8057; font-size: .95rem; font-weight: 700; }
+.address { padding: .7rem .6rem; border: 1px solid #cbd9bc; border-radius: 7px; background: #f0f5e6; font-size: 1.12rem; font-weight: 700; }
+.arrow { align-self: center; text-align: center; color: #7c9563; font-size: 1.4rem; }
+.coordinates { margin: .65rem 0; }
+.coordinates div { margin-bottom: .65rem; }
+.coordinates dt { font-size: .97rem; color: #627950; }
+.coordinates dd { margin: 0; font-size: 1.12rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.fictional { display: inline-block; padding: .25rem .5rem; border-radius: 5px; background: #e6efda; color: #607c47; font-size: .93rem; }
+.geocodingMap { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.7fr); gap: 1rem; margin-top: 1rem; align-items: center; }
+.geocodingMap .diagram { max-width: 18rem; margin-inline: auto; }
+.geocodingMap p { margin: 0; font-size: 1rem; }
+.worldFigure { margin-bottom: 1rem !important; }
+.worldFigure figcaption { margin-top: .5rem; }
+.utmDetail { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.6fr); gap: 1.2rem; align-items: start; }
+.zoneFigure figcaption { margin-top: .4rem; text-align: center; }
+.utmNotes { min-width: 0; }
+.utmNotes section + section { margin-top: 1rem; padding-top: .8rem; border-top: 1px solid #dfe7d3; }
+.utmNotes h5 { color: #496b35; }
+.utmNotes p { margin: 0; font-size: 1rem; }
+.metadataPair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.metadataCard { min-width: 0; padding: 1rem; border: 1px solid #d6e0ca; border-radius: 13px; background: #f9fcf3; }
+.metadataCard .diagram { max-width: 19rem; margin-inline: auto; }
+.metadataCard dl { margin: .7rem 0 0; }
+.metadataCard dl > div { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.3fr); gap: .75rem; padding: .6rem 0; border-bottom: 1px solid #e0e7d7; }
+.metadataCard dt { color: #637a50; font-size: .97rem; }
+.metadataCard dd { margin: 0; color: #3f5b33; font-size: 1rem; }
+.metadataFields > div:last-child { border-bottom: 0; }
+@media (max-width: 760px) {
+  .vectorGrid { grid-template-columns: 1fr; }
+  .vectorGrid .card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 1rem; align-items: center; }
+  .vectorGrid figcaption { margin: 0; text-align: left; }
+  .geocodingFlow { grid-template-columns: 1fr; }
+  .arrow { transform: rotate(90deg); line-height: 1; }
+  .coordinates { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; }
+  .utmDetail { grid-template-columns: 1fr; }
+  .zoneFigure { max-width: 24rem; width: 100%; margin-inline: auto !important; }
+}
+@media (max-width: 500px) {
+  .vectorGrid .card, .geocodingMap, .metadataPair { grid-template-columns: 1fr; }
+  .vectorGrid .diagram { max-width: 19rem; margin-inline: auto; }
+  .vectorGrid figcaption { text-align: center; }
+  .geocodingMap { gap: .7rem; }
+  .guide h4 { font-size: 1.17rem; }
+  .worldFigure .diagram text { display: none; }
+  .note { padding: .8rem; }
+}

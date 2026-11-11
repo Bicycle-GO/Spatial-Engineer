@@ -15,7 +15,15 @@ export function LessonReader({ chapter, trackId }: { chapter: Chapter; trackId: 
   const sourceIds = guide?.sourceIds ?? chapter.practical?.sourceIds;
   const relatedQuestions = chapter.practical ? practicalQuestions.filter(question=>question.chapterId===chapter.id) : [];
   const providedPast = trackId === "engineer" ? practicalPastQuestions.filter(question=>question.chapterId===chapter.id) : [];
-  const nextConcept = trackId === "engineer" && ["practical-transformation","practical-quality"].includes(chapter.id)
+  const nextConcept = trackId === "engineer" && chapter.id === "web-programming"
+    ? {id:"practical-ogc",title:"OGC 웹 GIS 서비스 네 가지",text:"지도 이미지·피처·커버리지·처리 실행을 비교해요"}
+    : trackId === "engineer" && chapter.id === "practical-code"
+    ? {id:"practical-code-output",title:"코드를 실행하면 무엇이 출력될까요?",text:"Python·Java 출력과 변수 추적표로 연습해요"}
+    : trackId === "engineer" && ["practical-cartography","visualization"].includes(chapter.id)
+    ? {id:"practical-classification",title:"데이터 분류법 다섯 가지 비교",text:"같은 값에 다른 경계를 적용해 보고 문제로 연결해요"}
+    : trackId === "engineer" && chapter.id === "image-processing"
+    ? {id:"practical-ndvi",title:"식생의 분광특성과 NDVI",text:"적색·근적외선 반사도와 정규화 식생지수를 공부해요"}
+    : trackId === "engineer" && ["practical-transformation","practical-quality"].includes(chapter.id)
     ? {id:"practical-adjustment-error",title:"보정 결과는 어떻게 검토할까요?",text:"점별 잔차와 여러 점의 RMS 오차를 그림으로 비교해요"}
     : trackId === "engineer" && ["processing","practical-raster","practical-vectorization"].includes(chapter.id)
     ? {id:"practical-rasterization",title:"반대 방향도 이해하기 · 벡터에서 래스터로",text:"같은 셀도 결정 규칙에 따라 값이 달라져요"}

@@ -1,0 +1,38 @@
+.guide { min-width: 0; margin-block: 1.1rem; color: #354b31; font-size: 1.02rem; line-height: 1.75; overflow-wrap: anywhere; }
+.guide *, .guide *::before, .guide *::after { box-sizing: border-box; }
+.guide h4 { margin: 0 0 1rem; font-size: 1.23rem; line-height: 1.55; }
+.guide h5 { margin: 0 0 .7rem; font-size: 1.12rem; line-height: 1.55; }
+.guide figure { min-width: 0; margin: 0; }
+.guide figcaption { margin-top: .5rem; color: #627850; font-size: 1rem; text-align: center; }
+.guide figcaption strong, .guide figcaption span { display: block; }
+.guide figcaption span { margin-top: .3rem; line-height: 1.7; }
+.guide p { margin: .75rem 0; }
+.diagram { display: block; width: 100%; height: auto; }
+.inputGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: .85rem; align-items: start; }
+.resultGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 285px), 1fr)); gap: 1rem; margin-top: 1.1rem; }
+.twoColumns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1rem; }
+.card { min-width: 0; padding: .9rem; border: 1px solid #d4dfc6; border-radius: 13px; background: #fbfdf6; }
+.card .diagram { max-width: 30rem; margin-inline: auto; }
+.card p { font-size: 1rem; line-height: 1.8; }
+.countCondition { padding: .9rem 1rem; margin-bottom: 1rem; border: 1px solid #d6e1c9; border-radius: 10px; background: #f0f5e6; }
+.countCondition p { margin: .25rem 0 0; font-size: 1rem; }
+.blankCounts { display: flex; flex-wrap: wrap; gap: .75rem 1.4rem; padding: .85rem 1rem; margin-top: 1rem; border-radius: 9px; background: #f0f4e8; font-size: 1.05rem; font-weight: 650; }
+.countLine { padding: .65rem .75rem; border-radius: 8px; background: #ebf2df; text-align: center; }
+.countLine strong { margin-left: .35rem; color: #466a32; font-size: 1.22rem; }
+.countLine span { display: block; margin-top: .2rem; color: #61784d; font-size: .96rem; }
+.note { padding: .85rem 1rem; border-radius: 10px; background: #f0f4e8; color: #5e7450; font-size: 1rem; }
+.smallNote, .reconstruction { font-size: .96rem; line-height: 1.8; color: #697b5b; }
+.reconstruction { margin: 0 0 1rem !important; padding: .8rem 1rem; border-left: 3px solid #9caf83; background: #f5f8ef; }
+.tableWrap { max-width: 100%; overflow-x: auto; }
+.countTable { width: 100%; border-collapse: collapse; font-size: 1rem; font-variant-numeric: tabular-nums; }
+.countTable caption { margin: .65rem 0; text-align: left; font-weight: 700; }
+.countTable th, .countTable td { padding: .7rem .6rem; border: 1px solid #d6e0c9; text-align: center; }
+.countTable th:first-child { text-align: left; width: 48%; }
+.countTable thead th { background: #ecf2e2; }
+.details { margin-top: .75rem; padding: .8rem 1rem; border: 1px solid #d9e2ce; border-radius: 9px; background: #fafcf5; }
+.details summary { color: #526e3e; font-size: 1rem; font-weight: 700; cursor: pointer; }
+.details summary:focus-visible { outline: 3px solid #97ad77; outline-offset: 4px; }
+.details p { margin-bottom: 0; font-size: 1rem; line-height: 1.8; }
+.retainedCount { display: inline-block; margin-top: .5rem; padding: .3rem .6rem; border-radius: 6px; color: #5c7750; background: #edf4e1; font-size: .95rem; }
+@media (max-width: 700px) { .twoColumns { grid-template-columns: 1fr; } .inputGrid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); } }
+@media (max-width: 450px) { .card { padding: .75rem; } .countTable th, .countTable td { padding: .55rem .35rem; font-size: .94rem; } .countTable th:first-child { width: 40%; } .countCondition, .note, .reconstruction { padding: .8rem; } }

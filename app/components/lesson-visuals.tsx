@@ -8,6 +8,10 @@ import { VectorizationVisual } from "./vectorization-visual";
 import { RasterizationVisual } from "./rasterization-visual";
 import { TransformationVisual } from "./transformation-visual";
 import { ResidualErrorVisual } from "./residual-error-visual";
+import { NdviVisual } from "./ndvi-visual";
+import { OgcServicesVisual } from "./ogc-services-visual";
+import { ClassificationVisual } from "./data-classification-visual";
+import { AerialPhotoVisual } from "./aerial-photo-visual";
 
 function Choices({ items, value, onChange, label }: { items: string[]; value: number; onChange: (index: number) => void; label: string }) {
   return <div className="visual-choices" aria-label={label}>{items.map((item, index) => <button type="button" key={item} aria-pressed={value === index} onClick={() => onChange(index)}>{item}</button>)}</div>;
@@ -128,6 +132,10 @@ export function LessonVisual({ kind }: { kind: VisualKind }) {
     case "rasterization": return <RasterizationVisual/>;
     case "transformation": return <TransformationVisual/>;
     case "residual-error": return <ResidualErrorVisual/>;
+    case "ndvi": return <NdviVisual/>;
+    case "ogc-services": return <OgcServicesVisual/>;
+    case "classification": return <ClassificationVisual/>;
+    case "aerial-photo": return <AerialPhotoVisual/>;
     case "overlay": return <OverlayVisual/>;
     case "interpolation": return <InterpolationVisual/>;
     case "resolution": return <ResolutionVisual/>;
