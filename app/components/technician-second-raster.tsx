@@ -33,6 +33,7 @@ function Grid({ rows, caption, selected, onSelect, marks, large = false, square 
   emptyLabel?: string;
 }) {
   return <div className={`${styles.gridScroll}${large ? ` ${styles.largeGrid}` : ""}${square ? ` ${styles.squareGrid}` : ""}`} tabIndex={0} role="region" aria-label={`${caption} 표. 가로로 넘겨 전체 열을 확인할 수 있습니다.`}>
+    {(large || square) && <p className={styles.scrollHint}>↔ 표 안을 가로로 넘기면 모든 열을 볼 수 있어요.</p>}
     <table className={styles.grid}>
       <caption>{caption}</caption>
       <thead><tr><th scope="col" className={styles.corner}>행 / 열</th>{rows[0].map((_, column) => <th scope="col" key={column}>{column + 1}</th>)}</tr></thead>
